@@ -1,0 +1,19 @@
+{% extends "__base__.jinja" %}
+
+{% block title %}
+  bookie
+{% endblock %}
+
+{% block body %}
+  <ul>
+    {% for bookmark in bookmarks %}
+      <li>
+        <div>{{ bookmark.title }}</div>
+        <div>{{ bookmark.url }}</div>
+        <div>{{ bookmark.description }}</div>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
+
+
