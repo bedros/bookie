@@ -1,19 +1,19 @@
-{% extends "__base__.jinja" %}
+<!doctype html>
 
-{% block title %}
-  bookie
-{% endblock %}
+<html lang="en">
+<head>
+  <meta charset="utf-8">
 
-{% block body %}
-  <ul>
-    {% for bookmark in bookmarks %}
-      <li>
-        <div>{{ bookmark.title }}</div>
-        <div>{{ bookmark.url }}</div>
-        <div>{{ bookmark.description }}</div>
-      </li>
-    {% endfor %}
-  </ul>
-{% endblock %}
+  <title>bookie</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 
+  <script src="{{ url_for('static', filename='scripts/index.js') }}"></script>
+</head>
 
+<body>
+  <script>
+    app = Elm.Main.fullscreen();
+  </script>
+</body>
+
+</html>

@@ -1,12 +1,15 @@
+# Config
+/config.json
+
+# Database
+*.db
+
+# Elm
+elm-stuff/
+
 # Python
 *.egg-info
 *.pyc
 *.pyo
 __pycache__
 venv
-
-# Database
-*.db
-
-# Config
-/config.json

@@ -1,0 +1,44 @@
+* {
+    padding: 0;
+    margin:  0;
+}
+
+body {
+    width: 95%;
+    margin:  0 auto;
+    margin-top: 24px;
+}
+
+ul {
+    list-style: none;
+}
+
+li {
+    display: flex;
+}
+
+li div {
+    padding: 0 2px 0 2px;
+    border-style: solid;
+}
+
+.entry-header {
+  background: #eee;
+  font-weight: 900;
+  padding: 2px;
+}
+
+.entry-title {
+  width: 25%;
+  border-width: 1px 0 1px 1px;
+}
+
+.entry-url {
+  width: 40%;
+  border: 1px solid;
+}
+
+.entry-description {
+  width: 35%;
+  border-width: 1px 1px 1px 0;
+}

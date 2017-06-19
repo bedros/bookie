@@ -8,3 +8,4 @@ app = Flask(__name__)
 dm = DataManager(config.database)
 
 import bookie.views
+import bookie.routing.api
