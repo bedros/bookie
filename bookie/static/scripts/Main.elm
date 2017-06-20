@@ -4,6 +4,7 @@ import Models exposing (..)
 import Msg exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
 import Api
 import Debug exposing (log)
 import Json.Decode as JsonD
@@ -33,6 +34,9 @@ subscriptions model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        SelectBookmark bookmark ->
+            ( { model | selectedBookmark = Just bookmark }, Cmd.none )
+
         ApiRequest ->
             ( model, Api.getBookmarks )
 
@@ -66,6 +70,7 @@ view : Model -> Html Msg
 view model =
     div []
         [ bookmarkTableView model.bookmarks
+        , bookmarkEditorView model.selectedBookmark
         ]
 
 
@@ -82,21 +87,49 @@ bookmarkTableHeadersView : Html Msg
 bookmarkTableHeadersView =
     li
         []
-        [ bookmarkTableEntryView "entry-header entry-title" (text "Title")
-        , bookmarkTableEntryView "entry-header entry-url" (text "Url")
-        , bookmarkTableEntryView "entry-header entry-description" (text "Description")
+        [ bookmarkTableEntryView "entry-header entry-title" [ text "Title" ]
+        , bookmarkTableEntryView "entry-header entry-url" [ text "Url" ]
+        , bookmarkTableEntryView "entry-header entry-description" [ text "Description" ]
         ]
 
 bookmarkTableRowView : Bookmark -> Html Msg
 bookmarkTableRowView bookmark =
     li
-        []
-        [ bookmarkTableEntryView "entry-title" (text bookmark.title)
-        , bookmarkTableEntryView "entry-url" (text bookmark.url)
-        , bookmarkTableEntryView "entry-description" (text bookmark.description)
+        [ onClick (SelectBookmark bookmark) ]
+        [ bookmarkTableEntryView "entry-title" [text bookmark.title]
+        , bookmarkTableEntryView "entry-url" [ a [] [ text bookmark.url ] ]
+        , bookmarkTableEntryView "entry-description" [ text bookmark.description ]
+        , bookmarkTableEntryView "entry-selector" []
         ]
 
 
-bookmarkTableEntryView : String -> Html Msg -> Html Msg
+bookmarkTableEntryView : String -> List (Html Msg) -> Html Msg
 bookmarkTableEntryView class_ view_ =
-    div [class class_] [ view_ ]
+    div [class class_] view_
+
+
+bookmarkEditorView : Maybe Bookmark -> Html Msg
+bookmarkEditorView selectedBookmark =
+    case selectedBookmark of
+        Just bookmark ->
+            div
+                [ id "editor" ]
+                [ input
+                    [ class "editor-form editor-form-title"
+                    , defaultValue bookmark.title
+                    ]
+                    [ ]
+                , input
+                    [ class "editor-form editor-form-url"
+                    , defaultValue bookmark.url
+                    ]
+                    [ ]
+                , input
+                    [ class "editor-form editor-form-description"
+                    , defaultValue bookmark.description
+                    ]
+                    [ ]
+                ]
+
+        Nothing ->
+            div [ id "editor" ] []

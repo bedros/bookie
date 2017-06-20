@@ -1,25 +1,27 @@
 * {
-    padding: 0;
-    margin:  0;
+  padding: 0;
+  margin:  0;
 }
 
 body {
-    width: 95%;
-    margin:  0 auto;
-    margin-top: 24px;
+  width: 95%;
+  margin:  0 auto;
+  margin-top: 24px;
+  margin-bottom: 24px;
 }
 
 ul {
-    list-style: none;
+  list-style: none;
 }
 
 li {
-    display: flex;
+  display: flex;
+  position: relative;
 }
 
 li div {
-    padding: 0 2px 0 2px;
-    border-style: solid;
+  padding: 0 2px 0 2px;
+  border-style: solid;
 }
 
 .entry-header {
@@ -41,4 +43,54 @@ li div {
 .entry-description {
   width: 35%;
   border-width: 1px 1px 1px 0;
+}
+
+.entry-selector {
+  width: 10px;
+  height: 10px;
+  border: 0;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  background: black;
+  opacity: 0.1;
+}
+
+.entry-selector:hover {
+  opacity: 0.5;
+}
+
+#editor {
+  position: absolute;
+  bottom: 24px;
+
+  width: 95%;
+  margin: 0 auto;
+
+  padding: 0 2px 0 2px;
+  border: solid 1px;
+
+  display: flex;
+}
+
+#editor input {
+  border: 0;
+}
+
+.editor-form {
+  padding: 0 2px 0 2px;
+}
+
+.editor-form-title {
+  width: 25%;
+}
+
+.editor-form-url {
+  width: 40%;
+}
+
+.editor-form-description {
+  width: 35%;
 }
