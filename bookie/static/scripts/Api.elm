@@ -31,7 +31,14 @@ update : Msg -> ResponseType
 update msg =
     case msg of
         ApiResponse (Ok response) ->
-            handleResponse response
+            let
+                resp =
+                    handleResponse response
+
+                _ =
+                    log "Response of the decoding pipeline" resp
+            in
+                resp
 
         ApiResponse (Err error) ->
             ResponseError (toString error)
@@ -74,7 +81,11 @@ handleResponse value =
                     ApiData (Data type_ (decodeData value))
 
         Err error ->
-            ApiError (Error "decoding" error)
+            let
+                _ =
+                    log "Decoding error" error
+            in
+                ApiError (Error "decoding" error)
 
 
 decodeError : Value -> ( String, String )
@@ -84,7 +95,11 @@ decodeError value =
             ( result.type_, result.message )
 
         Err error ->
-            ( "decoding", error )
+            let
+                _ =
+                    log "Decoding error" error
+            in
+                ( "decoding", error )
 
 
 errorDecoder : JsonD.Decoder Error

@@ -18,8 +18,9 @@ type alias Bookmark =
     { id : Int
     , title : String
     , url : String
-    , description : String
---    , tags : Tags
+    , description : Maybe String
+
+    --    , tags : Tags
     }
 
 
@@ -38,7 +39,7 @@ bookmarkDecoder : JsonD.Decoder Bookmark
 bookmarkDecoder =
     JsonD.map4
         Bookmark
-        (JsonD.field "bookmark_id" JsonD.int)
+        (JsonD.field "id" JsonD.int)
         (JsonD.field "title" JsonD.string)
         (JsonD.field "url" JsonD.string)
-        (JsonD.field "description" JsonD.string)
+        (JsonD.field "description" (JsonD.nullable JsonD.string))
