@@ -57,7 +57,11 @@ class Bookmarks(flask_restful.Resource):
                                   , url = url
                                   , description = description
                                   )
-        dm.insert(bookmark)
+        id_ = dm.insert(bookmark)
+        return wrap_response( self
+                            , self._resource
+                            , 'Inserted Bookmark with id {}'\
+                                  .format(id_))
 
     @use_kwargs({ 'id_': fields.Int(required=True)
                 , 'title': fields.String(missing=None)
