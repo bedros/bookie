@@ -32,7 +32,7 @@ type alias Model =
 init : ( Model, Cmd Msg )
 init =
     ( Model (Dict.empty) Browser.init Editor.init
-    , Api.getBookmarks
+    , Api.getBookmarks ApiResponse
     )
 
 
@@ -77,48 +77,49 @@ update msg model =
                 { model | editor = editor } ! [ subCmd ]
 
         ApiRequest ->
-            ( model, Api.getBookmarks )
+            ( model, Api.getBookmarks ApiResponse )
 
         ApiResponse response ->
-            case Api.update (ApiResponse response) of
-                Api.ApiData data ->
-                    let
-                        bookmarks =
-                            case (JsonD.decodeValue (JsonD.list Bookmark.decoder) data.data) of
-                                Ok bookmarks ->
-                                    bookmarksToDict bookmarks
+            let
+                ( apiMsg, subCmd ) =
+                    Api.update response
+            in
+                case apiMsg of
+                    Api.ApiData data ->
+                        let
+                            bookmarks =
+                                case (JsonD.decodeValue (JsonD.list Bookmark.decoder) data.data) of
+                                    Ok bookmarks ->
+                                        bookmarksToDict bookmarks
 
-                                Err error ->
-                                    let
-                                        _ =
-                                            log "Error decoding list of bookmarks" error
-                                    in
-                                        bookmarksToDict []
+                                    Err error ->
+                                        let
+                                            _ =
+                                                log "Error decoding list of bookmarks" error
+                                        in
+                                            bookmarksToDict []
 
-                        _ =
-                            log "Data.data" data.data
+                            _ =
+                                log "Data.data" data.data
 
-                        _ =
-                            log "Bookmarks" bookmarks
-                    in
-                        ( { model | bookmarks = bookmarks }, Cmd.none )
+                            _ =
+                                log "Bookmarks" bookmarks
+                        in
+                            { model | bookmarks = bookmarks } ! [ subCmd ]
 
-                Api.ApiError data ->
-                    let
-                        _ =
-                            log "ApiError" data
-                    in
-                        ( model, Cmd.none )
+                    Api.ApiError error ->
+                        let
+                            _ =
+                                log "ApiError" error
+                        in
+                            ( model, Cmd.none )
 
-                Api.ResponseError error ->
-                    let
-                        _ =
-                            log "ResponseError" error
-                    in
-                        ( model, Cmd.none )
-
-                _ ->
-                    ( model, Cmd.none )
+                    Api.ApiNetworkError errorString ->
+                        let
+                            _ =
+                                log "ResponseError" errorString
+                        in
+                            ( model, Cmd.none )
 
 
 

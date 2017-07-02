@@ -1,6 +1,5 @@
 module Api exposing (..)
 
-import Msg exposing (..)
 import Http
 import Json.Decode exposing (Value)
 import Json.Decode as JsonD
@@ -8,11 +7,14 @@ import Json.Encode
 import Debug exposing (log)
 
 
-type ResponseType
+type Msg
+    = Response (Result Http.Error Json.Decode.Value)
+
+
+type ApiMsg
     = ApiData Data
     | ApiError Error
-    | ResponseError String
-    | NoResponse
+    | ApiNetworkError String
 
 
 type alias Data =
@@ -33,10 +35,10 @@ type alias Error =
 ------------
 
 
-update : Msg -> ResponseType
+update : Msg -> ( ApiMsg, Cmd msg )
 update msg =
     case msg of
-        ApiResponse (Ok response) ->
+        Response (Ok response) ->
             let
                 resp =
                     handleResponse response
@@ -44,18 +46,19 @@ update msg =
                 _ =
                     log "Response of the decoding pipeline" resp
             in
-                resp
+                ( resp, Cmd.none )
 
-        ApiResponse (Err error) ->
-            ResponseError (toString error)
-
-        _ ->
-            NoResponse
+        Response (Err error) ->
+            ( ApiNetworkError (toString error), Cmd.none )
 
 
-getBookmarks : Cmd Msg
-getBookmarks =
-    Http.send ApiResponse (getJson "http://localhost:5000/api/bookmarks")
+{-| msg is a wrapper type that will be provided by the client.
+It should be able to accept a (Result Error a -> msg) as an argument.
+-}
+getBookmarks : (Msg -> msg) -> Cmd msg
+getBookmarks wrapper =
+    Http.send Response (getJson "http://localhost:5000/api/bookmarks")
+        |> Cmd.map wrapper
 
 
 getJson : String -> Http.Request Value
@@ -71,7 +74,7 @@ getJson url =
         }
 
 
-handleResponse : Value -> ResponseType
+handleResponse : Value -> ApiMsg
 handleResponse value =
     case JsonD.decodeValue (JsonD.field "type" JsonD.string) value of
         Ok type_ ->
