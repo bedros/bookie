@@ -27,6 +27,12 @@ type alias Error =
     }
 
 
+
+------------
+-- Update --
+------------
+
+
 update : Msg -> ResponseType
 update msg =
     case msg of

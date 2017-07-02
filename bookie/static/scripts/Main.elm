@@ -1,6 +1,7 @@
 module Main exposing (..)
 
 import Bookmark exposing (Bookmark)
+import Editor
 import Browser
 import Dict
 import Html exposing (Html, div, program)
@@ -24,13 +25,13 @@ main =
 type alias Model =
     { bookmarks : Dict.Dict Int Bookmark
     , browser : Browser.Model
---    , editor : Editor.Model
+    , editor : Editor.Model
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model (Dict.empty) Browser.init {-Editor.init-}
+    ( Model (Dict.empty) Browser.init Editor.init
     , Api.getBookmarks
     )
 
@@ -40,6 +41,12 @@ subscriptions model =
     Sub.none
 
 
+
+------------
+-- Update --
+------------
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -47,15 +54,27 @@ update msg model =
             let
                 ( browser, browserMsg, subCmd ) =
                     Browser.update bMsg model.browser
-            in
-                { model | browser = browser } ! [ subCmd ]
 
---        EditorMsg eMsg ->
---            let
---                ( editor, subCmd ) =
---                    Editor.update model.browser eMsg
---            in
---                { model | editor = editor } ! [ subCmd ]
+                maybeBookmark =
+                    case browserMsg of
+                        Browser.BrowserSelection maybeBookmark ->
+                            maybeBookmark
+
+                editor =
+                    model.editor
+            in
+                { model
+                    | browser = browser
+                    , editor = { editor | bookmark = maybeBookmark }
+                }
+                    ! [ subCmd ]
+
+        EditorMsg eMsg ->
+            let
+                ( editor, editorMsg, subCmd ) =
+                    Editor.update eMsg model.editor
+            in
+                { model | editor = editor } ! [ subCmd ]
 
         ApiRequest ->
             ( model, Api.getBookmarks )
@@ -102,15 +121,21 @@ update msg model =
                     ( model, Cmd.none )
 
 
+
+----------
+-- View --
+----------
+
+
 view : Model -> Html Msg
 view model =
     div []
         [ Browser.view model.browser model.bookmarks |> Html.map Msg.BrowserMsg
---        , Editor.view model.editor
+        , Editor.view model.editor |> Html.map Msg.EditorMsg
         ]
 
 
-bookmarksToDict: List Bookmark -> Dict.Dict Int Bookmark
+bookmarksToDict : List Bookmark -> Dict.Dict Int Bookmark
 bookmarksToDict bookmarks =
     listIntoDict Dict.empty bookmarks
 
@@ -118,7 +143,7 @@ bookmarksToDict bookmarks =
 listIntoDict : Dict.Dict Int Bookmark -> List Bookmark -> Dict.Dict Int Bookmark
 listIntoDict dict bookmarks =
     case bookmarks of
-        bookmark::rest ->
+        bookmark :: rest ->
             listIntoDict (insertBookmark dict bookmark) rest
 
         [] ->

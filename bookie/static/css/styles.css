@@ -3,11 +3,26 @@
   margin:  0;
 }
 
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+
 body {
+  background: #111;
+  color: #ddd;
   width: 95%;
+  height: 100%;
   margin:  0 auto;
   margin-top: 24px;
   margin-bottom: 24px;
+}
+
+#browser {
+  height: 600px;
+  overflow: auto;
+  background: #222;
 }
 
 ul {
@@ -22,10 +37,11 @@ li {
 li div {
   padding: 0 2px 0 2px;
   border-style: solid;
+  border-color: black;
 }
 
 .entry-header {
-  background: #eee;
+  background: #444;
   font-weight: 900;
   padding: 2px;
 }
@@ -38,6 +54,7 @@ li div {
 .entry-url {
   width: 40%;
   border: 1px solid;
+  border-color: black;
 }
 
 .entry-description {
@@ -54,7 +71,7 @@ li div {
   top: 0;
   left: -10px;
 
-  background: black;
+  background: #ddd;
   opacity: 0.1;
 }
 
@@ -63,14 +80,16 @@ li div {
 }
 
 #editor {
-  position: absolute;
-  bottom: 50px;
+  position: relative;
+
+  top: 10px;
 
   width: 95%;
   margin: 0 auto;
 
   padding: 0 2px 0 2px;
   border: solid 1px;
+  border-color: black;
 
   display: flex;
 }

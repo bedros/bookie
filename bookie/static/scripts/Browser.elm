@@ -27,6 +27,12 @@ init =
     Model Nothing
 
 
+
+------------
+-- Update --
+------------
+
+
 update : Msg -> Model -> ( Model, BrowserMsg, Cmd msg )
 update msg model =
     case msg of
@@ -43,6 +49,12 @@ update msg model =
             )
 
 
+
+----------
+-- View --
+----------
+
+
 view : Model -> Dict.Dict Int Bookmark -> Html Msg
 view model bookmarks =
     div [ id "browser" ]
@@ -54,7 +66,10 @@ viewBrowserTable model bookmarks =
     ul
         []
         (viewBrowserTableHeader
-            :: (List.map (\bkmk -> viewTableRow model bkmk) (Dict.values bookmarks))
+            :: (List.map
+                    (\bkmk -> viewTableRow model bkmk)
+                    (Dict.values bookmarks)
+               )
         )
 
 
@@ -62,20 +77,26 @@ viewBrowserTableHeader : Html Msg
 viewBrowserTableHeader =
     li
         []
-        [ viewTableCell "entry-header entry-title" [ text "Title" ]
-        , viewTableCell "entry-header entry-url" [ text "Url" ]
-        , viewTableCell "entry-header entry-description" [ text "Description" ]
+        [ viewTableCell
+            [ class "entry-header entry-title" ]
+            [ text "Title" ]
+        , viewTableCell
+            [ class "entry-header entry-url" ]
+            [ text "Url" ]
+        , viewTableCell
+            [ class "entry-header entry-description" ]
+            [ text "Description" ]
         ]
 
 
 viewTableRow : Model -> Bookmark -> Html Msg
 viewTableRow model bookmark =
     let
-        classes
-            = case model.selectedBookmark of
+        classes =
+            case model.selectedBookmark of
                 Just selectedBookmark ->
-                    if selectedBookmark.id == bookmark.id
-                        then "selected-row"
+                    if selectedBookmark.id == bookmark.id then
+                        "selected-row"
                     else
                         ""
 
@@ -86,13 +107,23 @@ viewTableRow model bookmark =
             [ onClick (SelectBookmark bookmark)
             , class classes
             ]
-            [ viewTableCell "entry-title" [ text bookmark.title ]
-            , viewTableCell "entry-url" [ a [] [ text bookmark.url ] ]
-            , viewTableCell "entry-description" [ text (withDefault "" bookmark.description) ]
-            , viewTableCell "entry-selector" []
+            [ viewTableCell
+                [ class "entry-title" ]
+                [ text bookmark.title ]
+            , viewTableCell
+                [ class "entry-url" ]
+                [ a [] [ text bookmark.url ] ]
+            , viewTableCell
+                [ class "entry-description" ]
+                [ text (withDefault "" bookmark.description) ]
+            , viewTableCell
+                [ class "entry-selector"
+                , onClick (SelectBookmark bookmark)
+                ]
+                []
             ]
 
 
-viewTableCell : String -> List (Html Msg) -> Html Msg
-viewTableCell class_ view_ =
-    div [ class class_ ] view_
+viewTableCell : List (Html.Attribute Msg) -> List (Html Msg) -> Html Msg
+viewTableCell attributes view_ =
+    div attributes view_

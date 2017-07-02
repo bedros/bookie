@@ -7,7 +7,7 @@ type alias Bookmark =
     { id : Int
     , title : String
     , url : String
-    , description: Maybe String
+    , description : Maybe String
     }
 
 

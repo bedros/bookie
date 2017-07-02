@@ -1,15 +1,13 @@
 module Editor exposing (..)
 
+import Bookmark exposing (Bookmark)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (..)
-import Models exposing (Bookmark)
 import Maybe exposing (withDefault)
 
 
 type alias Model =
     { bookmark : Maybe Bookmark
-    , bookmarkEditing : Maybe Bookmark
     }
 
 
@@ -23,70 +21,107 @@ type Msg
     | EditDescription String
 
 
+type EditorMsg
+    = EditorSave Bookmark
+    | NoOp
+
+
 init : Model
 init =
-    Model Nothing Nothing
+    Model Nothing
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
+
+------------
+-- Update --
+------------
+
+
+update : Msg -> Model -> ( Model, EditorMsg, Cmd msg )
 update msg model =
     case msg of
-        EditBookmark bookmark ->
-            ( { model
-                | bookmarkEditing =
-                    Just
-                        ( Bookmark bookmark.title
-                        , bookmark.url
-                        , bookmark.description
-                        )
-              }
+        CreateBookmark ->
+            ( { model | bookmark = Just Bookmark.empty }
+            , NoOp
             , Cmd.none
             )
 
-        CreateBookmark ->
-            ( { model | bookmarkEditing = Just (Bookmark "" "" "") }, Cmd.none )
+        DiscardChanges ->
+            ( { model | bookmark = Nothing }
+            , NoOp
+            , Cmd.none
+            )
+
+        EditBookmark bookmark ->
+            ( { model
+                | bookmark =
+                    Just
+                        (Bookmark
+                            bookmark.id
+                            bookmark.title
+                            bookmark.url
+                            bookmark.description
+                        )
+              }
+            , NoOp
+            , Cmd.none
+            )
 
         SaveBookmark ->
-            ( { model | bookmark = model.bookmarkEditing }, Cmd.none )
+            ( { model | bookmark = Nothing }
+            , EditorSave (withDefault (Bookmark.empty) model.bookmark)
+            , Cmd.none
+            )
 
         EditTitle title ->
             let
-                bookmarkEditing =
-                    model.bookmarkEditing
+                bookmark =
+                    withDefault (Bookmark.empty) model.bookmark
 
                 bookmarkEditing =
-                    { bookmarkEditing | title = title }
+                    { bookmark | title = title }
             in
-                ( { model | bookmarkEditing = bookmarkEditing }, Cmd.none )
+                ( { model | bookmark = Just bookmark }
+                , NoOp
+                , Cmd.none
+                )
 
         EditUrl url ->
             let
-                bookmarkEditing =
-                    model.bookmarkEditing
+                bookmark =
+                    withDefault (Bookmark.empty) model.bookmark
 
                 bookmarkEditing =
-                    { bookmarkEditing | url = url }
+                    { bookmark | url = url }
             in
-                ( { model | bookmarkEditing = bookmarkEditing }, Cmd.none )
+                ( { model | bookmark = Just bookmarkEditing }
+                , NoOp
+                , Cmd.none
+                )
 
         EditDescription description ->
             let
-                bookmarkEditing =
-                    model.bookmarkEditing
+                bookmark =
+                    withDefault (Bookmark.empty) model.bookmark
 
                 bookmarkEditing =
-                    { bookmarkEditing | description = description }
+                    { bookmark | description = Just description }
             in
-                ( { model | bookmarkEditing = bookmarkEditing }, Cmd.none )
+                ( { model | bookmark = Just bookmark }
+                , NoOp
+                , Cmd.none
+                )
 
 
 
--- View
+----------
+-- View --
+----------
 
 
 view : Model -> Html Msg
 view model =
-    case model.selectedBookmark of
+    case model.bookmark of
         Just bookmark ->
             viewEditorForm bookmark
 
