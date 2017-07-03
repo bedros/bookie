@@ -1,10 +1,12 @@
 module Main exposing (..)
 
-import Bookmark exposing (Bookmark)
+import Bookmark exposing (Bookmark, encoder)
 import Editor
 import Browser
 import Dict
-import Html exposing (Html, div, program)
+import Html exposing (Html, div, program, button, text)
+import Html.Attributes exposing (id)
+import Html.Events exposing (onClick)
 import Msg exposing (..)
 import Api
 import Debug exposing (log)
@@ -69,12 +71,52 @@ update msg model =
                 }
                     ! [ subCmd ]
 
+        CreateBookmark ->
+            let
+                ( editor, editorMsg, subCmd ) =
+                    Editor.update Editor.CreateBookmark model.editor
+            in
+                { model | editor = editor } ! [ subCmd ]
+
         EditorMsg eMsg ->
             let
                 ( editor, editorMsg, subCmd ) =
                     Editor.update eMsg model.editor
             in
-                { model | editor = editor } ! [ subCmd ]
+                case editorMsg of
+                    Editor.EditorSave bookmark ->
+                        let
+                            ( browser, browserMsg, subCmd ) =
+                                Browser.update Browser.DeselectBookmark model.browser
+                        in
+                            { model
+                                | browser = browser
+                                , editor = editor
+                                , bookmarks = updateBookmarks bookmark model.bookmarks
+                            }
+                                ! [ subCmd, Api.putBookmark ApiResponse (Bookmark.encoder bookmark) ]
+
+                    Editor.EditorSaveNew bookmark ->
+                        let
+                            ( browser, browserMsg, subCmd ) =
+                                Browser.update Browser.DeselectBookmark model.browser
+                        in
+                            { model
+                                | browser = browser
+                                , editor = editor
+                                , bookmarks = updateBookmarks bookmark model.bookmarks
+                            }
+                                ! [ subCmd, Api.postBookmark ApiResponse (Bookmark.encoder bookmark) ]
+
+                    Editor.EditorDiscardChanges ->
+                        let
+                            ( browser, browserMsg, subCmd ) =
+                                Browser.update Browser.DeselectBookmark model.browser
+                        in
+                            { model | browser = browser } ! [ subCmd ]
+
+                    _ ->
+                        { model | editor = editor } ! [ subCmd ]
 
         ApiRequest ->
             ( model, Api.getBookmarks ApiResponse )
@@ -85,6 +127,13 @@ update msg model =
                     Api.update response
             in
                 case apiMsg of
+                    Api.ApiConfirmation data ->
+                        let
+                            _ =
+                                log "API confirmation" data
+                        in
+                            model ! [ Cmd.none ]
+
                     Api.ApiData data ->
                         let
                             bookmarks =
@@ -98,12 +147,6 @@ update msg model =
                                                 log "Error decoding list of bookmarks" error
                                         in
                                             bookmarksToDict []
-
-                            _ =
-                                log "Data.data" data.data
-
-                            _ =
-                                log "Bookmarks" bookmarks
                         in
                             { model | bookmarks = bookmarks } ! [ subCmd ]
 
@@ -131,9 +174,28 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ Browser.view model.browser model.bookmarks |> Html.map Msg.BrowserMsg
+        [ menubar
+        , Browser.view model.browser model.bookmarks |> Html.map Msg.BrowserMsg
         , Editor.view model.editor |> Html.map Msg.EditorMsg
         ]
+
+
+menubar : Html Msg
+menubar =
+    div
+        [ id "menu-bar" ]
+        [ button [ onClick CreateBookmark ] [ text "new bookmark" ] ]
+
+
+
+-----------
+-- Utils --
+-----------
+
+
+updateBookmarks : Bookmark -> Dict.Dict Int Bookmark -> Dict.Dict Int Bookmark
+updateBookmarks bookmark bookmarks =
+    Dict.insert bookmark.id bookmark bookmarks
 
 
 bookmarksToDict : List Bookmark -> Dict.Dict Int Bookmark

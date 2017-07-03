@@ -3,6 +3,7 @@ module Editor exposing (..)
 import Bookmark exposing (Bookmark)
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick, onInput, onSubmit)
 import Maybe exposing (withDefault)
 
 
@@ -22,7 +23,9 @@ type Msg
 
 
 type EditorMsg
-    = EditorSave Bookmark
+    = EditorDiscardChanges
+    | EditorSave Bookmark
+    | EditorSaveNew Bookmark
     | NoOp
 
 
@@ -48,7 +51,7 @@ update msg model =
 
         DiscardChanges ->
             ( { model | bookmark = Nothing }
-            , NoOp
+            , EditorDiscardChanges
             , Cmd.none
             )
 
@@ -68,20 +71,40 @@ update msg model =
             )
 
         SaveBookmark ->
-            ( { model | bookmark = Nothing }
-            , EditorSave (withDefault (Bookmark.empty) model.bookmark)
-            , Cmd.none
-            )
+            let
+                newModel =
+                    { model | bookmark = Nothing }
+
+                bookmarkOut =
+                    (withDefault (Bookmark.empty) model.bookmark)
+            in
+                case model.bookmark of
+                    Just bookmark ->
+                        case bookmark.id of
+                            (-1) ->
+                                ( newModel
+                                , EditorSaveNew bookmarkOut
+                                , Cmd.none
+                                )
+
+                            _ ->
+                                ( { model | bookmark = Nothing }
+                                , EditorSave bookmarkOut
+                                , Cmd.none
+                                )
+
+                    Nothing ->
+                        ( model, NoOp, Cmd.none )
 
         EditTitle title ->
             let
                 bookmark =
                     withDefault (Bookmark.empty) model.bookmark
 
-                bookmarkEditing =
+                bookmarkUpdated =
                     { bookmark | title = title }
             in
-                ( { model | bookmark = Just bookmark }
+                ( { model | bookmark = Just bookmarkUpdated }
                 , NoOp
                 , Cmd.none
                 )
@@ -91,10 +114,10 @@ update msg model =
                 bookmark =
                     withDefault (Bookmark.empty) model.bookmark
 
-                bookmarkEditing =
+                bookmarkUpdated =
                     { bookmark | url = url }
             in
-                ( { model | bookmark = Just bookmarkEditing }
+                ( { model | bookmark = Just bookmarkUpdated }
                 , NoOp
                 , Cmd.none
                 )
@@ -104,10 +127,10 @@ update msg model =
                 bookmark =
                     withDefault (Bookmark.empty) model.bookmark
 
-                bookmarkEditing =
+                bookmarkUpdated =
                     { bookmark | description = Just description }
             in
-                ( { model | bookmark = Just bookmark }
+                ( { model | bookmark = Just bookmarkUpdated }
                 , NoOp
                 , Cmd.none
                 )
@@ -132,20 +155,35 @@ view model =
 viewEditorForm : Bookmark -> Html Msg
 viewEditorForm bookmark =
     div
-        [ id "editor" ]
+        [ id "editor"
+        , onSubmit SaveBookmark
+        ]
         [ input
             [ class "editor-form editor-form-title"
+            , onInput EditTitle
             , defaultValue bookmark.title
             ]
             []
         , input
             [ class "editor-form editor-form-url"
+            , onInput EditUrl
             , defaultValue bookmark.url
             ]
             []
         , input
             [ class "editor-form editor-form-description"
+            , onInput EditDescription
             , defaultValue (withDefault "" bookmark.description)
             ]
             []
+        , button
+            [ class "editor-form editor-form-discard"
+            , onClick DiscardChanges
+            ]
+            [ text "cancel" ]
+        , button
+            [ class "editor-form editor-form-save"
+            , onClick SaveBookmark
+            ]
+            [ text "save" ]
         ]

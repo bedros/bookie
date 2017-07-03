@@ -4,7 +4,6 @@ import Http
 import Json.Decode exposing (Value)
 import Json.Decode as JsonD
 import Json.Encode
-import Debug exposing (log)
 
 
 type Msg
@@ -12,7 +11,8 @@ type Msg
 
 
 type ApiMsg
-    = ApiData Data
+    = ApiConfirmation Data
+    | ApiData Data
     | ApiError Error
     | ApiNetworkError String
 
@@ -42,9 +42,6 @@ update msg =
             let
                 resp =
                     handleResponse response
-
-                _ =
-                    log "Response of the decoding pipeline" resp
             in
                 ( resp, Cmd.none )
 
@@ -52,12 +49,35 @@ update msg =
             ( ApiNetworkError (toString error), Cmd.none )
 
 
+
+-----------
+-- Utils --
+-----------
+
+
+bookmarksApiAddress : String
+bookmarksApiAddress =
+    "http://localhost:5000/api/bookmarks"
+
+
 {-| msg is a wrapper type that will be provided by the client.
 It should be able to accept a (Result Error a -> msg) as an argument.
 -}
 getBookmarks : (Msg -> msg) -> Cmd msg
 getBookmarks wrapper =
-    Http.send Response (getJson "http://localhost:5000/api/bookmarks")
+    Http.send Response (getJson bookmarksApiAddress)
+        |> Cmd.map wrapper
+
+
+postBookmark : (Msg -> msg) -> Value -> Cmd msg
+postBookmark wrapper body =
+    Http.send Response (postJson bookmarksApiAddress body)
+        |> Cmd.map wrapper
+
+
+putBookmark : (Msg -> msg) -> Value -> Cmd msg
+putBookmark wrapper body =
+    Http.send Response (putJson bookmarksApiAddress body)
         |> Cmd.map wrapper
 
 
@@ -74,11 +94,40 @@ getJson url =
         }
 
 
+postJson : String -> Value -> Http.Request Value
+postJson url body =
+    submitJson "POST" url body
+
+
+putJson : String -> Value -> Http.Request Value
+putJson url body =
+    submitJson "PUT" url body
+
+
+submitJson : String -> String -> Value -> Http.Request Value
+submitJson method url body =
+    Http.request
+        { method = method
+        , headers = []
+        , url = url
+        , body = Http.jsonBody body
+        , expect = Http.expectJson Json.Decode.value
+        , timeout = Nothing
+        , withCredentials = False
+        }
+
+
 handleResponse : Value -> ApiMsg
 handleResponse value =
     case JsonD.decodeValue (JsonD.field "type" JsonD.string) value of
         Ok type_ ->
             case type_ of
+                "bookmarks" ->
+                    ApiData (Data type_ (decodeData value))
+
+                "bookmarks confirmation" ->
+                    ApiConfirmation (Data type_ (decodeData value))
+
                 "error" ->
                     let
                         ( error_type, error_message ) =
@@ -87,14 +136,10 @@ handleResponse value =
                         ApiError (Error error_type error_message)
 
                 _ ->
-                    ApiData (Data type_ (decodeData value))
+                    ApiError (Error "unknown type" type_)
 
         Err error ->
-            let
-                _ =
-                    log "Decoding error" error
-            in
-                ApiError (Error "decoding" error)
+            ApiError (Error "decoding" error)
 
 
 decodeError : Value -> ( String, String )
@@ -104,11 +149,7 @@ decodeError value =
             ( result.type_, result.message )
 
         Err error ->
-            let
-                _ =
-                    log "Decoding error" error
-            in
-                ( "decoding", error )
+            ( "decoding", error )
 
 
 errorDecoder : JsonD.Decoder Error
@@ -123,7 +164,7 @@ decodeData : Value -> Json.Encode.Value
 decodeData value =
     case JsonD.decodeValue (JsonD.field "data" Json.Decode.value) value of
         Ok data ->
-            log "Decoded data" data
+            data
 
         Err error ->
             Json.Encode.string error

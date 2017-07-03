@@ -59,7 +59,7 @@ class Bookmarks(flask_restful.Resource):
                                   )
         id_ = dm.insert(bookmark)
         return wrap_response( self
-                            , self._resource
+                            , self._resource + " confirmation"
                             , 'Inserted Bookmark with id {}'\
                                   .format(id_))
 
@@ -75,14 +75,14 @@ class Bookmarks(flask_restful.Resource):
                                   )
         dm.update(bookmark, id_)
         return wrap_response( self
-                            , self._resource
+                            , self._resource + " confirmation"
                             , 'Updated Bookmark with id {}'.format(id_))
 
     @use_kwargs({'id_': fields.Int(required=True)})
     def delete(self, id_):
         dm.delete(models.Bookmark, id_)
         return wrap_response( self
-                            , self._resource
+                            , self._resource + " confirmation"
                             , 'Deleted Bookmark with id {}'.format(id_))
 
 

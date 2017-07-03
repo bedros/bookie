@@ -114,6 +114,14 @@ li div {
   width: 35%;
 }
 
+.editor-form-save {
+  background: lightgreen;
+}
+
+.editor-form-discard {
+  background: lightcoral;
+}
+
 .selected-row {
   background: rgba(50, 100, 150, 0.25);
 }

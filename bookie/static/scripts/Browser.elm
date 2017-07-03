@@ -6,6 +6,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Bookmark exposing (Bookmark)
 import Maybe exposing (withDefault)
+import Debug exposing (log)
 
 
 type alias Model =
@@ -43,10 +44,14 @@ update msg model =
             )
 
         DeselectBookmark ->
-            ( { model | selectedBookmark = Nothing }
-            , BrowserSelection Nothing
-            , Cmd.none
-            )
+            let
+                _ =
+                    log "deselecting bookmark"
+            in
+                ( { model | selectedBookmark = Nothing }
+                , BrowserSelection Nothing
+                , Cmd.none
+                )
 
 
 

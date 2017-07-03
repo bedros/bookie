@@ -10,3 +10,4 @@ type Msg
     | ApiResponse Api.Msg
     | BrowserMsg Browser.Msg
     | EditorMsg Editor.Msg
+    | CreateBookmark

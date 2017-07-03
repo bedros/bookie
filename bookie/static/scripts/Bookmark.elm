@@ -1,6 +1,8 @@
-module Bookmark exposing (Bookmark, empty, decoder)
+module Bookmark exposing (Bookmark, empty, decoder, encoder)
 
 import Json.Decode as JsonD
+import Json.Encode as JsonE
+import Maybe exposing (withDefault)
 
 
 type alias Bookmark =
@@ -24,3 +26,13 @@ decoder =
         (JsonD.field "title" JsonD.string)
         (JsonD.field "url" JsonD.string)
         (JsonD.field "description" (JsonD.nullable JsonD.string))
+
+
+encoder : Bookmark -> JsonE.Value
+encoder bookmark =
+    JsonE.object
+        [ ( "id_", JsonE.int bookmark.id )
+        , ( "title", JsonE.string bookmark.title )
+        , ( "url", JsonE.string bookmark.url )
+        , ( "description", JsonE.string (withDefault "" bookmark.description) )
+        ]
