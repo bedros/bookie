@@ -3,7 +3,7 @@ module Editor exposing (..)
 import Bookmark exposing (Bookmark)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick, onInput, onSubmit)
+import Html.Events exposing (onClick, onDoubleClick, onInput, onSubmit)
 import Maybe exposing (withDefault)
 
 
@@ -17,6 +17,7 @@ type Msg
     | EditBookmark Bookmark
     | SaveBookmark
     | DiscardChanges
+    | DeleteBookmark
     | EditTitle String
     | EditUrl String
     | EditDescription String
@@ -26,6 +27,7 @@ type EditorMsg
     = EditorDiscardChanges
     | EditorSave Bookmark
     | EditorSaveNew Bookmark
+    | EditorDeleteBookmark Bookmark
     | NoOp
 
 
@@ -80,21 +82,34 @@ update msg model =
             in
                 case model.bookmark of
                     Just bookmark ->
-                        case bookmark.id of
-                            (-1) ->
-                                ( newModel
-                                , EditorSaveNew bookmarkOut
-                                , Cmd.none
-                                )
+                        if (bookmark.title /= "" && bookmark.url /= "") then
+                            case bookmark.id of
+                                (-1) ->
+                                    ( newModel
+                                    , EditorSaveNew bookmarkOut
+                                    , Cmd.none
+                                    )
 
-                            _ ->
-                                ( { model | bookmark = Nothing }
-                                , EditorSave bookmarkOut
-                                , Cmd.none
-                                )
+                                _ ->
+                                    ( { model | bookmark = Nothing }
+                                    , EditorSave bookmarkOut
+                                    , Cmd.none
+                                    )
+                        else
+                            ( model, NoOp, Cmd.none )
 
                     Nothing ->
                         ( model, NoOp, Cmd.none )
+
+        DeleteBookmark ->
+            let
+                bookmarkOut =
+                    (withDefault (Bookmark.empty) model.bookmark)
+            in
+                ( { model | bookmark = Just Bookmark.empty }
+                , EditorDeleteBookmark bookmarkOut
+                , Cmd.none
+                )
 
         EditTitle title ->
             let
@@ -186,4 +201,9 @@ viewEditorForm bookmark =
             , onClick SaveBookmark
             ]
             [ text "save" ]
+        , button
+            [ class "editor-form editor-form-delete"
+            , onDoubleClick DeleteBookmark
+            ]
+            [ text "delete" ]
         ]

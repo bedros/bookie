@@ -25,6 +25,10 @@ body {
   background: #222;
 }
 
+a {
+  color: lightcyan;
+}
+
 ul {
   list-style: none;
 }

@@ -81,6 +81,12 @@ putBookmark wrapper body =
         |> Cmd.map wrapper
 
 
+deleteBookmark : (Msg -> msg) -> Value -> Cmd msg
+deleteBookmark wrapper body =
+    Http.send Response (deleteJson bookmarksApiAddress body)
+        |> Cmd.map wrapper
+
+
 getJson : String -> Http.Request Value
 getJson url =
     Http.request
@@ -102,6 +108,11 @@ postJson url body =
 putJson : String -> Value -> Http.Request Value
 putJson url body =
     submitJson "PUT" url body
+
+
+deleteJson : String -> Value -> Http.Request Value
+deleteJson url body =
+    submitJson "DELETE" url body
 
 
 submitJson : String -> String -> Value -> Http.Request Value

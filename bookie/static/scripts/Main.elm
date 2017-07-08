@@ -113,7 +113,23 @@ update msg model =
                             ( browser, browserMsg, subCmd ) =
                                 Browser.update Browser.DeselectBookmark model.browser
                         in
-                            { model | browser = browser } ! [ subCmd ]
+                            { model
+                                | editor = editor
+                                , browser = browser
+                            }
+                                ! [ subCmd ]
+
+                    Editor.EditorDeleteBookmark bookmark ->
+                        let
+                            ( browser, browserMsg, subCmd ) =
+                                Browser.update Browser.DeselectBookmark model.browser
+                        in
+                            { model
+                                | browser = browser
+                                , editor = editor
+                                , bookmarks = removeBookmark bookmark model.bookmarks
+                            }
+                                ! [ subCmd, Api.deleteBookmark ApiResponse (Bookmark.encoder bookmark) ]
 
                     _ ->
                         { model | editor = editor } ! [ subCmd ]
@@ -191,6 +207,11 @@ menubar =
 -----------
 -- Utils --
 -----------
+
+
+removeBookmark : Bookmark -> Dict.Dict Int Bookmark -> Dict.Dict Int Bookmark
+removeBookmark bookmark bookmarks =
+    Dict.remove bookmark.id bookmarks
 
 
 updateBookmarks : Bookmark -> Dict.Dict Int Bookmark -> Dict.Dict Int Bookmark

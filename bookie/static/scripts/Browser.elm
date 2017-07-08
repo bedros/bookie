@@ -6,7 +6,6 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Bookmark exposing (Bookmark)
 import Maybe exposing (withDefault)
-import Debug exposing (log)
 
 
 type alias Model =
@@ -44,14 +43,10 @@ update msg model =
             )
 
         DeselectBookmark ->
-            let
-                _ =
-                    log "deselecting bookmark"
-            in
-                ( { model | selectedBookmark = Nothing }
-                , BrowserSelection Nothing
-                , Cmd.none
-                )
+            ( { model | selectedBookmark = Nothing }
+            , BrowserSelection Nothing
+            , Cmd.none
+            )
 
 
 
@@ -117,7 +112,7 @@ viewTableRow model bookmark =
                 [ text bookmark.title ]
             , viewTableCell
                 [ class "entry-url" ]
-                [ a [] [ text bookmark.url ] ]
+                [ a [ href bookmark.url ] [ text bookmark.url ] ]
             , viewTableCell
                 [ class "entry-description" ]
                 [ text (withDefault "" bookmark.description) ]
