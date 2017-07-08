@@ -6,6 +6,7 @@
 
 # Elm
 elm-stuff/
+bookie/static/dist/
 
 # Python
 *.egg-info
@@ -13,3 +14,6 @@ elm-stuff/
 *.pyo
 __pycache__
 venv
+/bookie/static/index.js
+/bookie/static/dist/main.js
+/bookie/static/dist/style.css

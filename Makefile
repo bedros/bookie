@@ -1,10 +1,13 @@
-server-debug:
+debug:
 	FLASK_APP=bookie FLASK_DEBUG=1 flask run
 
-elm:
-	cd bookie/static/scripts; \
-		elm-make Main.elm --output index.js --warn --debug
+frontend: elm style
 
-elm-format:
-	cd bookie/static/scripts; \
-		elm-format --yes .
+elm:
+	elm-make frontend/Main.elm --output bookie/static/dist/main.js --warn --debug
+
+style:
+	elm-css Stylesheets.elm
+
+format:
+	elm-format --yes .

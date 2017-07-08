@@ -1,7 +1,9 @@
-module Editor exposing (..)
+module Editor.Main exposing (..)
 
 import Bookmark exposing (Bookmark)
+import Editor.Style as Style
 import Html exposing (..)
+import Html.CssHelpers
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onDoubleClick, onInput, onSubmit)
 import Maybe exposing (withDefault)
@@ -157,6 +159,10 @@ update msg model =
 ----------
 
 
+{ id, class, classList } =
+    Html.CssHelpers.withNamespace "bookie"
+
+
 view : Model -> Html Msg
 view model =
     case model.bookmark of
@@ -164,45 +170,45 @@ view model =
             viewEditorForm bookmark
 
         Nothing ->
-            div [ id "editor" ] []
+            div [ id Style.Editor ] []
 
 
 viewEditorForm : Bookmark -> Html Msg
 viewEditorForm bookmark =
     div
-        [ id "editor"
+        [ id Style.Editor
         , onSubmit SaveBookmark
         ]
         [ input
-            [ class "editor-form editor-form-title"
+            [ class [ Style.Form, Style.FormTitle ]
             , onInput EditTitle
             , defaultValue bookmark.title
             ]
             []
         , input
-            [ class "editor-form editor-form-url"
+            [ class [ Style.Form, Style.FormUrl ]
             , onInput EditUrl
             , defaultValue bookmark.url
             ]
             []
         , input
-            [ class "editor-form editor-form-description"
+            [ class [ Style.Form, Style.FormDescription ]
             , onInput EditDescription
             , defaultValue (withDefault "" bookmark.description)
             ]
             []
         , button
-            [ class "editor-form editor-form-discard"
+            [ class [ Style.Form, Style.FormCancel ]
             , onClick DiscardChanges
             ]
             [ text "cancel" ]
         , button
-            [ class "editor-form editor-form-save"
+            [ class [ Style.Form, Style.FormSave ]
             , onClick SaveBookmark
             ]
             [ text "save" ]
         , button
-            [ class "editor-form editor-form-delete"
+            [ class [ Style.Form, Style.FormDelete ]
             , onDoubleClick DeleteBookmark
             ]
             [ text "delete" ]

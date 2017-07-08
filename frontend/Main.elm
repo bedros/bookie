@@ -1,17 +1,18 @@
 module Main exposing (..)
 
-import Bookmark exposing (Bookmark, encoder)
-import Editor
-import Browser
-import Dict
-import Html exposing (Html, div, program, button, text)
-import Html.Attributes exposing (id)
-import Html.Events exposing (onClick)
-import Msg exposing (..)
 import Api
+import Bookmark exposing (Bookmark, encoder)
+import Browser.Main as Browser
 import Debug exposing (log)
+import Dict
+import Editor.Main as Editor
+import Html exposing (Html, div, program, button, text)
+import Html.CssHelpers
+import Html.Events exposing (onClick)
 import Json.Decode as JsonD
+import Msg exposing (..)
 import Result
+import Style exposing (CssIds, CssClasses)
 
 
 main : Program Never Model Msg
@@ -182,28 +183,6 @@ update msg model =
 
 
 
-----------
--- View --
-----------
-
-
-view : Model -> Html Msg
-view model =
-    div []
-        [ menubar
-        , Browser.view model.browser model.bookmarks |> Html.map Msg.BrowserMsg
-        , Editor.view model.editor |> Html.map Msg.EditorMsg
-        ]
-
-
-menubar : Html Msg
-menubar =
-    div
-        [ id "menu-bar" ]
-        [ button [ onClick CreateBookmark ] [ text "new bookmark" ] ]
-
-
-
 -----------
 -- Utils --
 -----------
@@ -237,3 +216,29 @@ listIntoDict dict bookmarks =
 insertBookmark : Dict.Dict Int Bookmark -> Bookmark -> Dict.Dict Int Bookmark
 insertBookmark bookmarks bookmark =
     Dict.insert bookmark.id bookmark bookmarks
+
+
+
+----------
+-- View --
+----------
+
+
+{ id, class, classList } =
+    Html.CssHelpers.withNamespace "bookie"
+
+
+view : Model -> Html Msg
+view model =
+    div [ id Style.App ]
+        [ menubar
+        , Browser.view model.browser model.bookmarks |> Html.map Msg.BrowserMsg
+        , Editor.view model.editor |> Html.map Msg.EditorMsg
+        ]
+
+
+menubar : Html Msg
+menubar =
+    div
+        [ class [ Style.Menu ] ]
+        [ button [ onClick CreateBookmark ] [ text "new bookmark" ] ]

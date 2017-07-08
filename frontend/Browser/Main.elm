@@ -1,8 +1,10 @@
-module Browser exposing (..)
+module Browser.Main exposing (..)
 
+import Browser.Style as Style
 import Dict
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.CssHelpers
 import Html.Events exposing (..)
 import Bookmark exposing (Bookmark)
 import Maybe exposing (withDefault)
@@ -55,9 +57,13 @@ update msg model =
 ----------
 
 
+{ id, class, classList } =
+    Html.CssHelpers.withNamespace "bookie"
+
+
 view : Model -> Dict.Dict Int Bookmark -> Html Msg
 view model bookmarks =
-    div [ id "browser" ]
+    div [ id Style.Browser ]
         [ viewBrowserTable model bookmarks ]
 
 
@@ -78,13 +84,13 @@ viewBrowserTableHeader =
     li
         []
         [ viewTableCell
-            [ class "entry-header entry-title" ]
+            [ class [ Style.Header, Style.Title ] ]
             [ text "Title" ]
         , viewTableCell
-            [ class "entry-header entry-url" ]
+            [ class [ Style.Header, Style.Url ] ]
             [ text "Url" ]
         , viewTableCell
-            [ class "entry-header entry-description" ]
+            [ class [ Style.Header, Style.Description ] ]
             [ text "Description" ]
         ]
 
@@ -96,28 +102,31 @@ viewTableRow model bookmark =
             case model.selectedBookmark of
                 Just selectedBookmark ->
                     if selectedBookmark.id == bookmark.id then
-                        "selected-row"
+                        Style.RowSelected
                     else
-                        ""
+                        Style.None
 
                 Nothing ->
-                    ""
+                    Style.None
     in
         li
             [ onClick (SelectBookmark bookmark)
-            , class classes
+            , class [ classes ]
             ]
             [ viewTableCell
-                [ class "entry-title" ]
+                [ class [ Style.Title ]
+                ]
                 [ text bookmark.title ]
             , viewTableCell
-                [ class "entry-url" ]
+                [ class [ Style.Url ]
+                ]
                 [ a [ href bookmark.url ] [ text bookmark.url ] ]
             , viewTableCell
-                [ class "entry-description" ]
+                [ class [ Style.Description ]
+                ]
                 [ text (withDefault "" bookmark.description) ]
             , viewTableCell
-                [ class "entry-selector"
+                [ class [ Style.Description ]
                 , onClick (SelectBookmark bookmark)
                 ]
                 []
