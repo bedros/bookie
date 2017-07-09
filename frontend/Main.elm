@@ -12,6 +12,7 @@ import Html.Events exposing (onClick)
 import Json.Decode as JsonD
 import Msg exposing (..)
 import Result
+import Search.Main as Search
 import Style exposing (CssIds, CssClasses)
 
 
@@ -27,14 +28,16 @@ main =
 
 type alias Model =
     { bookmarks : Dict.Dict Int Bookmark
+    , displayedBookmarks : Dict.Dict Int Bookmark
     , browser : Browser.Model
     , editor : Editor.Model
+    , search : Search.Model
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model (Dict.empty) Browser.init Editor.init
+    ( Model (Dict.empty) (Dict.empty) Browser.init Editor.init Search.init
     , Api.getBookmarks ApiResponse
     )
 
@@ -53,6 +56,18 @@ subscriptions model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        SearchMsg sMsg ->
+            let
+                ( search, searchMsg, subCmd ) =
+                    Search.update sMsg model.search model.bookmarks
+            in
+                case searchMsg of
+                    Search.SearchResult results ->
+                        { model
+                            | search = search
+                            , displayedBookmarks = bookmarksToDict results
+                        }
+                            ! [ subCmd ]
         BrowserMsg bMsg ->
             let
                 ( browser, browserMsg, subCmd ) =
@@ -89,11 +104,14 @@ update msg model =
                         let
                             ( browser, browserMsg, subCmd ) =
                                 Browser.update Browser.DeselectBookmark model.browser
+
+                            updatedBookmarks = updateBookmarks bookmark model.bookmarks
                         in
                             { model
                                 | browser = browser
                                 , editor = editor
-                                , bookmarks = updateBookmarks bookmark model.bookmarks
+                                , bookmarks = updatedBookmarks
+                                , displayedBookmarks = updatedBookmarks
                             }
                                 ! [ subCmd, Api.putBookmark ApiResponse (Bookmark.encoder bookmark) ]
 
@@ -101,11 +119,14 @@ update msg model =
                         let
                             ( browser, browserMsg, subCmd ) =
                                 Browser.update Browser.DeselectBookmark model.browser
+
+                            updatedBookmarks = updateBookmarks bookmark model.bookmarks
                         in
                             { model
                                 | browser = browser
                                 , editor = editor
-                                , bookmarks = updateBookmarks bookmark model.bookmarks
+                                , bookmarks = updatedBookmarks
+                                , displayedBookmarks = updatedBookmarks
                             }
                                 ! [ subCmd, Api.postBookmark ApiResponse (Bookmark.encoder bookmark) ]
 
@@ -124,11 +145,14 @@ update msg model =
                         let
                             ( browser, browserMsg, subCmd ) =
                                 Browser.update Browser.DeselectBookmark model.browser
+
+                            updatedBookmarks = removeBookmark bookmark model.bookmarks
                         in
                             { model
                                 | browser = browser
                                 , editor = editor
-                                , bookmarks = removeBookmark bookmark model.bookmarks
+                                , bookmarks = updatedBookmarks
+                                , displayedBookmarks = updatedBookmarks
                             }
                                 ! [ subCmd, Api.deleteBookmark ApiResponse (Bookmark.encoder bookmark) ]
 
@@ -165,7 +189,11 @@ update msg model =
                                         in
                                             bookmarksToDict []
                         in
-                            { model | bookmarks = bookmarks } ! [ subCmd ]
+                            { model
+                                | bookmarks = bookmarks
+                                , displayedBookmarks = bookmarks
+                            }
+                                ! [ subCmd ]
 
                     Api.ApiError error ->
                         let
@@ -232,7 +260,8 @@ view : Model -> Html Msg
 view model =
     div [ id Style.App ]
         [ menubar
-        , Browser.view model.browser model.bookmarks |> Html.map Msg.BrowserMsg
+        , Search.view model.search |> Html.map Msg.SearchMsg
+        , Browser.view model.browser model.displayedBookmarks |> Html.map Msg.BrowserMsg
         , Editor.view model.editor |> Html.map Msg.EditorMsg
         ]
 
