@@ -4,6 +4,7 @@ import Css.File exposing (CssFileStructure, CssCompilerProgram)
 import Style
 import Browser.Style
 import Editor.Style
+import Search.Style
 
 
 port files : CssFileStructure -> Cmd msg
@@ -17,6 +18,7 @@ fileStructure =
                 [ Style.css
                 , Browser.Style.css
                 , Editor.Style.css
+                , Search.Style.css
                 ]
           )
         ]

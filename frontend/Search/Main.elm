@@ -3,10 +3,12 @@ module Search.Main exposing (..)
 import Simple.Fuzzy as Fuzzy
 import Bookmark exposing (Bookmark)
 import Html exposing (..)
+import Html.Attributes exposing (placeholder)
 import Html.Events exposing (onInput)
 import Html.CssHelpers
 import Set
 import Dict
+import Search.Style as Style
 
 
 type alias Model =
@@ -102,9 +104,11 @@ addUniqueToList field item keys items =
 view : Model -> Html Msg
 view model =
     div
-        []
+        [ id Style.Search ]
         [ input
-            [ onInput Search
+            [ class [ Style.SearchBox ]
+            , onInput Search
+            , placeholder "search"
             ]
             []
         ]

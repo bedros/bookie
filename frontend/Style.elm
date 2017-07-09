@@ -7,6 +7,7 @@ import Css.Namespace exposing (namespace)
 
 type CssClasses
     = Menu
+    | NewBookmarkButton
 
 
 type CssIds
@@ -35,15 +36,18 @@ css =
         , id App
             []
         , class Menu
-            [ children
-                [ button
-                    [ backgroundColor successColor
-                    , color whiteColor
-                    , border3 (px 1) solid mediumGray
-                    , borderRadius <| px 3
-                    , padding <| px 4
-                    , margin <| px 4
-                    ]
+            [ displayFlex
+            , justifyContent spaceBetween
+            ]
+        , class NewBookmarkButton
+            [ backgroundColor successColor
+            , color whiteColor
+            , border3 (px 1) solid mediumGray
+            , borderRadius <| px 3
+            , padding <| px 4
+            , margin <| px 4
+            , hover
+                [ backgroundColor successSaturatedColor
                 ]
             ]
         ]

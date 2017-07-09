@@ -259,15 +259,21 @@ insertBookmark bookmarks bookmark =
 view : Model -> Html Msg
 view model =
     div [ id Style.App ]
-        [ menubar
-        , Search.view model.search |> Html.map Msg.SearchMsg
+        [ menu model
         , Browser.view model.browser model.displayedBookmarks |> Html.map Msg.BrowserMsg
         , Editor.view model.editor |> Html.map Msg.EditorMsg
         ]
 
 
-menubar : Html Msg
-menubar =
+menu : Model -> Html Msg
+menu model =
     div
         [ class [ Style.Menu ] ]
-        [ button [ onClick CreateBookmark ] [ text "new bookmark" ] ]
+        [ button
+            [ onClick CreateBookmark
+            , class [ Style.NewBookmarkButton ]
+            ]
+            [ text "new bookmark"
+            ]
+        , Search.view model.search |> Html.map Msg.SearchMsg
+        ]

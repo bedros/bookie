@@ -195,18 +195,21 @@ viewEditorForm bookmark =
             [ class [ Style.FormTitle ]
             , onInput EditTitle
             , defaultValue bookmark.title
+            , placeholder "title"
             ]
             []
         , input
             [ class [ Style.FormUrl ]
             , onInput EditUrl
             , defaultValue bookmark.url
+            , placeholder "url"
             ]
             []
         , input
             [ class [ Style.FormDescription ]
             , onInput EditDescription
             , defaultValue (withDefault "" bookmark.description)
+            , placeholder "description"
             ]
             []
         , button

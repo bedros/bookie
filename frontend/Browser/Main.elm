@@ -111,7 +111,6 @@ viewTableRow model bookmark =
     in
         li
             [ class [ classes ]
-            , onDoubleClick (SelectBookmark bookmark)
             ]
             [ viewTableCell
                 [ class [ Style.Title ]
