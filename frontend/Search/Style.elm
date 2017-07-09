@@ -28,6 +28,5 @@ css =
                 ]
             ]
         , class SearchBox
-            [
-            ]
+            []
         ]

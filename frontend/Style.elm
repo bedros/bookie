@@ -33,6 +33,9 @@ css =
         , a
             [ color primaryAccentColor
             ]
+        , button
+            [ cursor pointer
+            ]
         , id App
             []
         , class Menu

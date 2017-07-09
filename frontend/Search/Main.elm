@@ -35,7 +35,7 @@ init =
 ------------
 
 
-update : Msg -> Model -> (Dict.Dict Int Bookmark) -> ( Model, SearchMsg, Cmd msg )
+update : Msg -> Model -> Dict.Dict Int Bookmark -> ( Model, SearchMsg, Cmd msg )
 update msg model bookmarks =
     case msg of
         Search query ->
@@ -55,7 +55,6 @@ search query bookmarks =
             Fuzzy.filter .url query bookmarks
     in
         mergeLists .id titles urls
-
 
 
 mergeLists : (a -> comparable) -> List a -> List a -> List a

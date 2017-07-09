@@ -17,6 +17,8 @@ type CssClasses
     | RowSelected
     | HeaderLeft
     | HeaderRight
+    | Sorted
+    | Sortable
 
 
 type CssIds
@@ -57,10 +59,19 @@ css =
                 ]
             ]
         , class Header
-            [ backgroundColor Base.secondaryBackgroundColor
+            [ displayFlex
+            , justifyContent spaceBetween
+            , backgroundColor Base.secondaryBackgroundColor
             , color Base.primaryTextColor
             , fontWeight <| int 600
             , padding <| px 4
+            , hover
+                [ descendants
+                    [ class Sorted
+                        [ opacity <| num 0.75
+                        ]
+                    ]
+                ]
             ]
         , class HeaderLeft
             [ borderTopLeftRadius <| px 6
@@ -80,7 +91,8 @@ css =
             [ width <| pct 35
             ]
         , class Selector
-            [ height <| px 8
+            [ cursor pointer
+            , height <| px 8
             , width <| px 24
             , left <| px -38
             , top <| px 6
@@ -100,5 +112,14 @@ css =
             ]
         , class RowSelected
             [ backgroundColor Base.lightGray
+            ]
+        , class Sortable
+            [ cursor pointer
+            , hover
+                [ backgroundColor Base.mediumGray
+                ]
+            ]
+        , class Sorted
+            [ opacity <| num 0.5
             ]
         ]

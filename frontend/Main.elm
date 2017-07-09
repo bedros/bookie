@@ -56,109 +56,6 @@ subscriptions model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        SearchMsg sMsg ->
-            let
-                ( search, searchMsg, subCmd ) =
-                    Search.update sMsg model.search model.bookmarks
-            in
-                case searchMsg of
-                    Search.SearchResult results ->
-                        { model
-                            | search = search
-                            , displayedBookmarks = bookmarksToDict results
-                        }
-                            ! [ subCmd ]
-        BrowserMsg bMsg ->
-            let
-                ( browser, browserMsg, subCmd ) =
-                    Browser.update bMsg model.browser
-
-                maybeBookmark =
-                    case browserMsg of
-                        Browser.BrowserSelection maybeBookmark ->
-                            maybeBookmark
-
-                editor =
-                    model.editor
-            in
-                { model
-                    | browser = browser
-                    , editor = { editor | bookmark = maybeBookmark }
-                }
-                    ! [ subCmd ]
-
-        CreateBookmark ->
-            let
-                ( editor, editorMsg, subCmd ) =
-                    Editor.update Editor.CreateBookmark model.editor
-            in
-                { model | editor = editor } ! [ subCmd ]
-
-        EditorMsg eMsg ->
-            let
-                ( editor, editorMsg, subCmd ) =
-                    Editor.update eMsg model.editor
-            in
-                case editorMsg of
-                    Editor.EditorSave bookmark ->
-                        let
-                            ( browser, browserMsg, subCmd ) =
-                                Browser.update Browser.DeselectBookmark model.browser
-
-                            updatedBookmarks = updateBookmarks bookmark model.bookmarks
-                        in
-                            { model
-                                | browser = browser
-                                , editor = editor
-                                , bookmarks = updatedBookmarks
-                                , displayedBookmarks = updatedBookmarks
-                            }
-                                ! [ subCmd, Api.putBookmark ApiResponse (Bookmark.encoder bookmark) ]
-
-                    Editor.EditorSaveNew bookmark ->
-                        let
-                            ( browser, browserMsg, subCmd ) =
-                                Browser.update Browser.DeselectBookmark model.browser
-
-                            updatedBookmarks = updateBookmarks bookmark model.bookmarks
-                        in
-                            { model
-                                | browser = browser
-                                , editor = editor
-                                , bookmarks = updatedBookmarks
-                                , displayedBookmarks = updatedBookmarks
-                            }
-                                ! [ subCmd, Api.postBookmark ApiResponse (Bookmark.encoder bookmark) ]
-
-                    Editor.EditorDiscardChanges ->
-                        let
-                            ( browser, browserMsg, subCmd ) =
-                                Browser.update Browser.DeselectBookmark model.browser
-                        in
-                            { model
-                                | editor = editor
-                                , browser = browser
-                            }
-                                ! [ subCmd ]
-
-                    Editor.EditorDeleteBookmark bookmark ->
-                        let
-                            ( browser, browserMsg, subCmd ) =
-                                Browser.update Browser.DeselectBookmark model.browser
-
-                            updatedBookmarks = removeBookmark bookmark model.bookmarks
-                        in
-                            { model
-                                | browser = browser
-                                , editor = editor
-                                , bookmarks = updatedBookmarks
-                                , displayedBookmarks = updatedBookmarks
-                            }
-                                ! [ subCmd, Api.deleteBookmark ApiResponse (Bookmark.encoder bookmark) ]
-
-                    _ ->
-                        { model | editor = editor } ! [ subCmd ]
-
         ApiRequest ->
             ( model, Api.getBookmarks ApiResponse )
 
@@ -208,6 +105,114 @@ update msg model =
                                 log "ResponseError" errorString
                         in
                             ( model, Cmd.none )
+
+        BrowserMsg bMsg ->
+            let
+                ( browser, browserMsg, subCmd ) =
+                    Browser.update bMsg model.browser
+            in
+                case browserMsg of
+                    Browser.BrowserSelection maybeBookmark ->
+                        let
+                            editor =
+                                model.editor
+                        in
+                            { model
+                                | browser = browser
+                                , editor = { editor | bookmark = maybeBookmark }
+                            }
+                                ! [ subCmd ]
+
+                    Browser.NoOp ->
+                        { model | browser = browser } ! [ subCmd ]
+
+        CreateBookmark ->
+            let
+                ( editor, editorMsg, subCmd ) =
+                    Editor.update Editor.CreateBookmark model.editor
+            in
+                { model | editor = editor } ! [ subCmd ]
+
+        EditorMsg eMsg ->
+            let
+                ( editor, editorMsg, subCmd ) =
+                    Editor.update eMsg model.editor
+            in
+                case editorMsg of
+                    Editor.EditorSave bookmark ->
+                        let
+                            ( browser, browserMsg, subCmd ) =
+                                Browser.update Browser.DeselectBookmark model.browser
+
+                            updatedBookmarks =
+                                updateBookmarks bookmark model.bookmarks
+                        in
+                            { model
+                                | browser = browser
+                                , editor = editor
+                                , bookmarks = updatedBookmarks
+                                , displayedBookmarks = updatedBookmarks
+                            }
+                                ! [ subCmd, Api.putBookmark ApiResponse (Bookmark.encoder bookmark) ]
+
+                    Editor.EditorSaveNew bookmark ->
+                        let
+                            ( browser, browserMsg, subCmd ) =
+                                Browser.update Browser.DeselectBookmark model.browser
+
+                            updatedBookmarks =
+                                updateBookmarks bookmark model.bookmarks
+                        in
+                            { model
+                                | browser = browser
+                                , editor = editor
+                                , bookmarks = updatedBookmarks
+                                , displayedBookmarks = updatedBookmarks
+                            }
+                                ! [ subCmd, Api.postBookmark ApiResponse (Bookmark.encoder bookmark) ]
+
+                    Editor.EditorDiscardChanges ->
+                        let
+                            ( browser, browserMsg, subCmd ) =
+                                Browser.update Browser.DeselectBookmark model.browser
+                        in
+                            { model
+                                | editor = editor
+                                , browser = browser
+                            }
+                                ! [ subCmd ]
+
+                    Editor.EditorDeleteBookmark bookmark ->
+                        let
+                            ( browser, browserMsg, subCmd ) =
+                                Browser.update Browser.DeselectBookmark model.browser
+
+                            updatedBookmarks =
+                                removeBookmark bookmark model.bookmarks
+                        in
+                            { model
+                                | browser = browser
+                                , editor = editor
+                                , bookmarks = updatedBookmarks
+                                , displayedBookmarks = updatedBookmarks
+                            }
+                                ! [ subCmd, Api.deleteBookmark ApiResponse (Bookmark.encoder bookmark) ]
+
+                    _ ->
+                        { model | editor = editor } ! [ subCmd ]
+
+        SearchMsg sMsg ->
+            let
+                ( search, searchMsg, subCmd ) =
+                    Search.update sMsg model.search model.bookmarks
+            in
+                case searchMsg of
+                    Search.SearchResult results ->
+                        { model
+                            | search = search
+                            , displayedBookmarks = bookmarksToDict results
+                        }
+                            ! [ subCmd ]
 
 
 
