@@ -165,50 +165,52 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    case model.bookmark of
-        Just bookmark ->
-            viewEditorForm bookmark
+    div [ id Style.Editor ]
+        [ case model.bookmark of
+            Just bookmark ->
+                viewEditorForm bookmark
 
-        Nothing ->
-            div [ id Style.Editor ] []
+            Nothing ->
+                div [] []
+        ]
 
 
 viewEditorForm : Bookmark -> Html Msg
 viewEditorForm bookmark =
     div
-        [ id Style.Editor
+        [ class [ Style.Form ]
         , onSubmit SaveBookmark
         ]
-        [ input
-            [ class [ Style.Form, Style.FormTitle ]
+        [ button
+            [ class [ Style.FormCancel ]
+            , onClick DiscardChanges
+            ]
+            [ text "cancel" ]
+        , button
+            [ class [ Style.FormSave ]
+            , onClick SaveBookmark
+            ]
+            [ text "save" ]
+        , input
+            [ class [ Style.FormTitle ]
             , onInput EditTitle
             , defaultValue bookmark.title
             ]
             []
         , input
-            [ class [ Style.Form, Style.FormUrl ]
+            [ class [ Style.FormUrl ]
             , onInput EditUrl
             , defaultValue bookmark.url
             ]
             []
         , input
-            [ class [ Style.Form, Style.FormDescription ]
+            [ class [ Style.FormDescription ]
             , onInput EditDescription
             , defaultValue (withDefault "" bookmark.description)
             ]
             []
         , button
-            [ class [ Style.Form, Style.FormCancel ]
-            , onClick DiscardChanges
-            ]
-            [ text "cancel" ]
-        , button
-            [ class [ Style.Form, Style.FormSave ]
-            , onClick SaveBookmark
-            ]
-            [ text "save" ]
-        , button
-            [ class [ Style.Form, Style.FormDelete ]
+            [ class [ Style.FormDelete ]
             , onDoubleClick DeleteBookmark
             ]
             [ text "delete" ]

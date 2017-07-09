@@ -1,8 +1,9 @@
 module Editor.Style exposing (..)
 
 import Css exposing (..)
-import Css.Elements exposing (input, div, li, ul)
+import Css.Elements exposing (button, input, div, li, ul)
 import Css.Namespace exposing (namespace)
+import Style as Base
 
 
 type CssClasses
@@ -23,22 +24,29 @@ css : Stylesheet
 css =
     (stylesheet << namespace "bookie")
         [ id Editor
-            [ border <| px 1
-            , borderColor <| hex "000"
-            , displayFlex
-            , margin2 zero auto
-            , padding4 zero (px 2) zero (px 2)
+            []
+        , class Form
+            [ margin2 zero auto
+            , padding <| px 8
             , top <| px 10
-            , width <| pct 95
             , position relative
             , children
                 [ input
-                    [ border zero
+                    [ border3 (px 1) solid Base.mediumGray
+                    , borderRadius <| px 3
+                    , padding <| px 4
+                    , margin <| px 4
+                    ]
+                , button
+                    [ border3 (px 1) solid Base.mediumGray
+                    , borderRadius <| px 3
+                    , padding <| px 4
+                    , margin <| px 4
                     ]
                 ]
-            ]
-        , class Form
-            [ padding4 zero (px 2) zero (px 2)
+            , displayFlex
+            , border3 (px 1) solid Base.mediumGray
+            , borderRadius <| px 6
             ]
         , class FormTitle
             [ width <| pct 25
@@ -50,12 +58,24 @@ css =
             [ width <| pct 35
             ]
         , class FormCancel
-            [
+            [ backgroundColor Base.warningColor
+            , color Base.whiteColor
+            , hover
+                [ backgroundColor Base.warningSaturatedColor
+                ]
             ]
         , class FormDelete
-            [ backgroundColor <| hex "dd4444"
+            [ backgroundColor Base.dangerColor
+            , color Base.whiteColor
+            , hover
+                [ backgroundColor Base.dangerSaturatedColor
+                ]
             ]
         , class FormSave
-            [ backgroundColor <| hex "44dd44"
+            [ backgroundColor Base.successColor
+            , color Base.whiteColor
+            , hover
+                [ backgroundColor Base.successSaturatedColor
+                ]
             ]
         ]

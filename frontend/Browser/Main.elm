@@ -5,7 +5,7 @@ import Dict
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.CssHelpers
-import Html.Events exposing (..)
+import Html.Events exposing (onClick, onDoubleClick)
 import Bookmark exposing (Bookmark)
 import Maybe exposing (withDefault)
 
@@ -84,13 +84,13 @@ viewBrowserTableHeader =
     li
         []
         [ viewTableCell
-            [ class [ Style.Header, Style.Title ] ]
+            [ class [ Style.Header, Style.HeaderLeft, Style.Title ] ]
             [ text "Title" ]
         , viewTableCell
             [ class [ Style.Header, Style.Url ] ]
             [ text "Url" ]
         , viewTableCell
-            [ class [ Style.Header, Style.Description ] ]
+            [ class [ Style.Header, Style.HeaderRight, Style.Description ] ]
             [ text "Description" ]
         ]
 
@@ -110,8 +110,8 @@ viewTableRow model bookmark =
                     Style.None
     in
         li
-            [ onClick (SelectBookmark bookmark)
-            , class [ classes ]
+            [ class [ classes ]
+            , onDoubleClick (SelectBookmark bookmark)
             ]
             [ viewTableCell
                 [ class [ Style.Title ]
@@ -126,7 +126,7 @@ viewTableRow model bookmark =
                 ]
                 [ text (withDefault "" bookmark.description) ]
             , viewTableCell
-                [ class [ Style.Description ]
+                [ class [ Style.Selector ]
                 , onClick (SelectBookmark bookmark)
                 ]
                 []

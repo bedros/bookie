@@ -1,6 +1,7 @@
 module Browser.Style exposing (..)
 
 import Css exposing (..)
+import Css.Colors as Colors
 import Css.Elements exposing (div, li, ul)
 import Css.Namespace exposing (namespace)
 import Style as Base
@@ -14,6 +15,8 @@ type CssClasses
     | Selector
     | None
     | RowSelected
+    | HeaderLeft
+    | HeaderRight
 
 
 type CssIds
@@ -33,32 +36,69 @@ css =
             , position relative
             , children
                 [ div
-                    [ padding <| px 2
-                    , borderStyle solid
+                    [ padding <| px 4
+                    , border3 (px 1) solid Base.mediumGray
+                    ]
+                ]
+            , nthChild "2n+2"
+                [ children
+                    [ div
+                        [ borderTop zero
+                        , borderBottom zero
+                        ]
+                    ]
+                ]
+            , lastChild
+                [ children
+                    [ div
+                        [ borderBottom3 (px 1) solid Base.mediumGray
+                        ]
                     ]
                 ]
             ]
         , class Header
-            [ backgroundColor <| hex "444"
-            , fontWeight <| int 300
-            , padding <| px 2
+            [ backgroundColor Base.secondaryBackgroundColor
+            , color Base.primaryTextColor
+            , fontWeight <| int 600
+            , padding <| px 4
+            ]
+        , class HeaderLeft
+            [ borderTopLeftRadius <| px 6
+            ]
+        , class HeaderRight
+            [ borderTopRightRadius <| px 6
             ]
         , class Title
             [ width <| pct 25
-            , borderWidth <| px 1
             ]
         , class Url
             [ width <| pct 40
-            , border <| px 1
-            , borderColor <| hex "000"
+            , borderLeft zero
+            , borderRight zero
             ]
         , class Description
             [ width <| pct 35
-            , borderWidth <| px 1
             ]
         , class Selector
-            [ color Base.primaryAccentColor
+            [ height <| px 8
+            , width <| px 24
+            , left <| px -38
+            , top <| px 6
+            , position absolute
+            , backgroundColor Colors.black
+            , opacity <| num 0.15
+            , border <| px 1
+            , before
+                [ property "content" "\"edit\""
+                , position relative
+                , top <| px -6
+                , color Base.lightGray
+                ]
+            , hover
+                [ opacity <| num 0.67
+                ]
             ]
         , class RowSelected
-            [ backgroundColor <| rgba 50 100 150 0.25 ]
+            [ backgroundColor Base.lightGray
+            ]
         ]
