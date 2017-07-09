@@ -108,7 +108,7 @@ update msg model =
                 bookmarkOut =
                     (withDefault (Bookmark.empty) model.bookmark)
             in
-                ( { model | bookmark = Just Bookmark.empty }
+                ( { model | bookmark = Nothing }
                 , EditorDeleteBookmark bookmarkOut
                 , Cmd.none
                 )
