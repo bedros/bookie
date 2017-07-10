@@ -29,16 +29,26 @@ css : Stylesheet
 css =
     (stylesheet << namespace "bookie")
         [ id Browser
-            []
+            [ border3 (px 1) solid Base.lightGray
+            , height <| pct 75
+            , borderRadius <| px 6
+            , marginTop <| px 8
+            , paddingTop <| px 2
+            ]
         , ul
             [ listStyle none
+            , overflowY auto
+            , height <| pct 100
+            , margin zero
+            , paddingLeft <| px 32
+            , paddingRight <| px 2
             ]
         , li
             [ displayFlex
             , position relative
             , children
                 [ div
-                    [ padding <| px 4
+                    [ padding <| px 2
                     , border3 (px 1) solid Base.mediumGray
                     ]
                 ]
@@ -94,7 +104,7 @@ css =
             [ cursor pointer
             , height <| px 8
             , width <| px 24
-            , left <| px -38
+            , left <| px -30
             , top <| px 6
             , position absolute
             , backgroundColor Colors.black

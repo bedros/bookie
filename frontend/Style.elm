@@ -19,6 +19,9 @@ css =
     (stylesheet << namespace "bookie")
         [ html
             [ fontFamily sansSerif
+            , height <| pct 100
+            , overflow hidden
+            , padding zero
             ]
         , body
             [ backgroundColor primaryBackgroundColor
@@ -37,7 +40,8 @@ css =
             [ cursor pointer
             ]
         , id App
-            []
+            [ height <| pct 100
+            ]
         , class Menu
             [ displayFlex
             , justifyContent spaceBetween

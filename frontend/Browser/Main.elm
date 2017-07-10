@@ -213,7 +213,12 @@ viewTableRow model bookmark =
             , viewTableCell
                 [ class [ Style.Url ]
                 ]
-                [ a [ href bookmark.url ] [ text bookmark.url ] ]
+                [ a
+                    [ href bookmark.url
+                    , target "_blank"
+                    ]
+                    [ text bookmark.url ]
+                    ]
             , viewTableCell
                 [ class [ Style.Description ]
                 ]
