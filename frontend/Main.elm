@@ -6,7 +6,8 @@ import Browser.Main as Browser
 import Debug exposing (log)
 import Dict
 import Editor.Main as Editor
-import Html exposing (Html, div, program, button, text)
+import Html exposing (a, Html, div, program, button, text)
+import Html.Attributes exposing (href)
 import Html.CssHelpers
 import Html.Events exposing (onClick)
 import Json.Decode as JsonD
@@ -267,6 +268,7 @@ view model =
         [ menu model
         , Browser.view model.browser model.displayedBookmarks |> Html.map Msg.BrowserMsg
         , Editor.view model.editor |> Html.map Msg.EditorMsg
+        , footer
         ]
 
 
@@ -280,5 +282,26 @@ menu model =
             ]
             [ text "new bookmark"
             ]
+        , div
+            [ class [ Style.Brand ] ]
+            [ div
+                [ class [ Style.BrandTitle ] ]
+                [ text "bookie" ]
+            , text " | "
+            , div
+                [ class [ Style.BrandTagline ] ]
+                [ text "fast. simple. bookmarks." ]
+            ]
         , Search.view model.search |> Html.map Msg.SearchMsg
+        ]
+
+footer : Html Msg
+footer =
+    div
+        [ class [ Style.Footer ] ]
+        [ div [] [ text "Working in progress" ]
+        , div [] [ text "|" ]
+        , a
+            [ href "https://github.com/francium/bookie" ]
+            [ text "see on github" ]
         ]

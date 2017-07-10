@@ -24,6 +24,7 @@ css =
                     , borderRadius <| px 3
                     , padding <| px 4
                     , margin <| px 4
+                    , width <| px 256
                     ]
                 ]
             ]

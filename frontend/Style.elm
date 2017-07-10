@@ -1,13 +1,18 @@
 module Style exposing (..)
 
 import Css exposing (..)
-import Css.Elements exposing (button, html, body, a)
+import Css.Colors as Colors
+import Css.Elements exposing (div, button, html, body, a)
 import Css.Namespace exposing (namespace)
 
 
 type CssClasses
     = Menu
     | NewBookmarkButton
+    | Footer
+    | Brand
+    | BrandTitle
+    | BrandTagline
 
 
 type CssIds
@@ -41,6 +46,7 @@ css =
             ]
         , id App
             [ height <| pct 100
+            , position relative
             ]
         , class Menu
             [ displayFlex
@@ -56,6 +62,47 @@ css =
             , hover
                 [ backgroundColor successSaturatedColor
                 ]
+            ]
+        , class Footer
+            [ color mediumGray
+            , paddingTop <| em 1
+            , position absolute
+            , bottom <| px 32
+            , width <| pct 100
+            , displayFlex
+            , justifyContent center
+            , children
+                [ a
+                    [ color mediumGray
+                    , paddingRight <| px 8
+                    , paddingLeft <| px 8
+                    ]
+                , div
+                    [ paddingRight <| px 8
+                    , paddingLeft <| px 8
+                    ]
+                ]
+            ]
+        , class Brand
+            [ color mediumGray
+            , displayFlex
+            , justifyContent spaceAround
+            , width <| px 256
+            , alignSelf center
+            , fontSize <| em 1.1
+            , fontWeight <| int 600
+            , property "-webkit-touch-callout" "none"
+            , property "-webkit-user-select" "none"
+            , property "-khtml-user-select" "none"
+            , property "-moz-user-select" "none"
+            , property "-ms-user-select" "none"
+            , property "user-select" "none"
+            ]
+        , class BrandTitle
+            [ color Colors.gray
+            ]
+        , class BrandTagline
+            [
             ]
         ]
 
