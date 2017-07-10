@@ -42,8 +42,7 @@ pip install -r requirements.txt
 echo
 echo "Launching server to create a initial database..."
 echo "---------------------------------------------------------"
-export CREATE_DB=1
-timeout 5s make debug
+scripts/init_db.py
 
 echo
 echo "Adding fresh heroku.db database for deployment..."
