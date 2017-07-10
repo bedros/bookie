@@ -1,9 +1,13 @@
 #!/bin/bash
 
+echo
+echo "Compiling the frontend code..."
+echo "---------------------------------------------------------"
 make frontend
 
-git checkout heroku
-
+echo
+echo "Creating a config.json file..."
+echo "---------------------------------------------------------"
 cat > config.json <<- EOM
 {
     "database_provider": "sqlite",
@@ -12,9 +16,21 @@ cat > config.json <<- EOM
 }
 EOM
 
+echo
+echo "Creating a virtualenv..."
+echo "---------------------------------------------------------"
 virtualenv venv
+
+echo
+echo "Installing pip requirements..."
+echo "---------------------------------------------------------"
 pip install -r requirements.txt
 
+echo
+echo "Launching server to create a initial database..."
+echo "---------------------------------------------------------"
 export CREATE_DB=1
-export FLASK_APP=bookie
-timeout 5s flask run
+timeout 5s make debug
+
+echo
+echo "Done"
