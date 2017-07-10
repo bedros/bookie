@@ -1,5 +1,7 @@
 #!/bin/bash
 
+make frontend
+
 git checkout heroku
 
 cat > config.json <<- EOM
@@ -10,10 +12,9 @@ cat > config.json <<- EOM
 }
 EOM
 
-make frontend
-
 virtualenv venv
 pip install -r requirements.txt
 
 export CREATE_DB=1
-timeout 5s make debug
+export FLASK_APP=bookie
+timeout 5s flask run
