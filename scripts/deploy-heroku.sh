@@ -1,4 +1,6 @@
 #!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
 
 echo
 echo "Checking out deploy/heroku branch..."
@@ -53,6 +55,11 @@ echo
 echo "Pushing to heroku..."
 echo "---------------------------------------------------------"
 git push heroku deploy/heroku:master
+
+echo
+echo "Checking out master branch..."
+echo "---------------------------------------------------------"
+git checkout master
 
 echo
 echo "Done"
