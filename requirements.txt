@@ -1,3 +1,5 @@
+gevent
+gunicorn
 Flask-RESTful==0.3.6
 SQLAlchemy==1.1.10
 webargs==1.7.0
