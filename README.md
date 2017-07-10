@@ -20,3 +20,22 @@ this before launching the server (but remember to do `unset DB_CREATE` afterward
 Install the `bookie` project
 
     pip install --editable .
+    
+To compile the frontend Elm code you will need to install the following (`-g` is optional and can be inserted in the following command after the word `install`)
+
+    npm install -g elm elm-css
+    
+Compile the frontend (`y` when asked to install elm packages)
+
+    make frontend
+    
+Start a debugging server
+
+    make debug
+    
+Open up `http://localhost:5000` in a browser
+    
+# Issues
+
+If something doesn't work right or something is missing, please report it as an
+issue at [github.com/francium/bookie/issues](github.com/francium/bookie/issues)
