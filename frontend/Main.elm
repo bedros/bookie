@@ -299,7 +299,7 @@ footer : Html Msg
 footer =
     div
         [ class [ Style.Footer ] ]
-        [ div [] [ text "Working in progress" ]
+        [ div [] [ text "work in progress" ]
         , div [] [ text "|" ]
         , a
             [ href "https://github.com/francium/bookie" ]
