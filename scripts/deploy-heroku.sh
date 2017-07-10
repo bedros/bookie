@@ -14,7 +14,7 @@ fi
 echo
 echo "Compiling the frontend code..."
 echo "---------------------------------------------------------"
-make frontend
+make frontend-prod
 
 echo
 echo "Creating a config.json file..."
