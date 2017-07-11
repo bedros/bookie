@@ -21,7 +21,7 @@ git merge master
 echo
 echo "Compiling the frontend code..."
 echo "---------------------------------------------------------"
-make frontend
+make frontend_prod
 
 echo
 echo "Creating a config.json file..."
