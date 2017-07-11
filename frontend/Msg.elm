@@ -13,3 +13,4 @@ type Msg
     | EditorMsg Editor.Msg
     | CreateBookmark
     | SearchMsg Search.Msg
+    | ShowInfoDialog Bool

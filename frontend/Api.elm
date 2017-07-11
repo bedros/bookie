@@ -55,7 +55,6 @@ update msg =
 -----------
 
 
-
 handleResponse : Value -> ApiMsg
 handleResponse value =
     case JsonD.decodeValue (JsonD.field "type" JsonD.string) value of

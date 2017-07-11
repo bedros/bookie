@@ -10,7 +10,7 @@ import Editor.Main as Editor
 import Html exposing (a, Html, div, program, button, text)
 import Html.Attributes exposing (href)
 import Html.CssHelpers
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, onMouseEnter, onMouseLeave)
 import Json.Decode as JsonD
 import Msg exposing (..)
 import Result
@@ -35,12 +35,13 @@ type alias Model =
     , browser : Browser.Model
     , editor : Editor.Model
     , search : Search.Model
+    , showInfoDialog : Bool
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model (Dict.empty) (Dict.empty) Browser.init Editor.init Search.init
+    ( Model (Dict.empty) (Dict.empty) Browser.init Editor.init Search.init False
     , Api.getBookmarks ApiResponse
     )
 
@@ -81,7 +82,6 @@ update msg model =
                                                 let
                                                     _ =
                                                         log "Error decoding id of new bookmark" error
-
                                                 in
                                                     Dict.keys model.bookmarks
                                                         |> List.maximum
@@ -89,8 +89,7 @@ update msg model =
                                                         |> (+) 1
 
                                     bookmarks =
-                                            setNewBookmarkId id model.bookmarks
-
+                                        setNewBookmarkId id model.bookmarks
                                 in
                                     { model
                                         | bookmarks = bookmarks
@@ -243,6 +242,9 @@ update msg model =
                         }
                             ! [ subCmd ]
 
+        ShowInfoDialog state ->
+            { model | showInfoDialog = state } ! []
+
 
 
 -----------
@@ -283,13 +285,15 @@ insertBookmark bookmarks bookmark =
 setNewBookmarkId : Int -> Dict.Dict Int Bookmark -> Dict.Dict Int Bookmark
 setNewBookmarkId id bookmarks =
     let
-        bookmark = withDefault (Bookmark.empty) (Dict.get Constants.default_id bookmarks)
+        bookmark =
+            withDefault (Bookmark.empty) (Dict.get Constants.default_id bookmarks)
 
-        bookmarkUpdated = { bookmark | id = id }
-
+        bookmarkUpdated =
+            { bookmark | id = id }
     in
         Dict.insert id bookmarkUpdated bookmarks
             |> Dict.remove Constants.default_id
+
 
 
 ----------
@@ -321,6 +325,14 @@ menu model =
             ]
             [ text "new bookmark"
             ]
+        , button
+            [ onMouseEnter (ShowInfoDialog True)
+            , onMouseLeave (ShowInfoDialog False)
+            , class [ Style.InfoDialogButton ]
+            ]
+            [ text "?"
+            ]
+        , infoDialog model.showInfoDialog
         , div
             [ class [ Style.Brand ] ]
             [ div
@@ -333,6 +345,50 @@ menu model =
             ]
         , Search.view model.search |> Html.map Msg.SearchMsg
         ]
+
+
+infoDialog : Bool -> Html Msg
+infoDialog display =
+    let
+        style =
+            [ Style.InfoDialog ]
+
+        styles =
+            case display of
+                False ->
+                    Style.Hidden :: style
+
+                True ->
+                    style
+    in
+        div
+            [ class styles ]
+            [ div
+                [ class [ Style.InfoDialogHelp ] ]
+                [ div
+                    [ class [ Style.InfoDialogHelpTitle ] ]
+                    [ text "Help" ]
+                , text
+                    ("The interface is fairly intuitive, but the only thing "
+                        ++ "that might not be obvious is that you need to DOUBLE CLICK "
+                        ++ "the delete button for it to work."
+                    )
+                ]
+            , div
+                [ class [ Style.InfoDialogOther ] ]
+                [ text
+                    ("bookie is a simple and efficient bookmark manager. Its "
+                        ++ "primary goals are speed and simplicity."
+                    )
+                , text
+                    ("It's still in the early stages of development (it's a toy project really -- "
+                        ++ "to 'git gud' with Elm, Python and full stack development in general). "
+                        ++ "The code can be found at github (link at the bottom). If you have any suggestions "
+                        ++ "or have found a bug, please create an issue with a detailed description."
+                    )
+                ]
+            ]
+
 
 footer : Html Msg
 footer =

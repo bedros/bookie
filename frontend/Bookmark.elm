@@ -1,11 +1,14 @@
-module Bookmark exposing ( Bookmark
-                         , empty
-                         , decoder
-                         , decodeId
-                         , decodeTitle
-                         , decodeUrl
-                         , decodeDescription
-                         , encoder)
+module Bookmark
+    exposing
+        ( Bookmark
+        , empty
+        , decoder
+        , decodeId
+        , decodeTitle
+        , decodeUrl
+        , decodeDescription
+        , encoder
+        )
 
 import Constants
 import Json.Decode as JsonD

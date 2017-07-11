@@ -13,6 +13,12 @@ type CssClasses
     | Brand
     | BrandTitle
     | BrandTagline
+    | InfoDialogButton
+    | InfoDialog
+    | InfoDialogHelp
+    | InfoDialogOther
+    | InfoDialogHelpTitle
+    | Hidden
 
 
 type CssIds
@@ -102,7 +108,59 @@ css =
             [ color Colors.gray
             ]
         , class BrandTagline
-            [
+            []
+        , class InfoDialogButton
+            [ backgroundColor mediumGray
+            , color primaryBackgroundColor
+            , height <| px 16
+            , width <| px 16
+            , border zero
+            , borderRadius <| pct 100
+            , displayFlex
+            , alignSelf center
+            , fontSize <| px 10
+            , fontWeight <| int 900
+            , justifyContent center
+            , hover
+                [ backgroundColor primaryAccentColor
+                ]
+            ]
+        , class InfoDialog
+            [ position absolute
+            , height <| px 256
+            , width <| px 386
+            , backgroundColor <| primaryBackgroundColor
+            , border2 (px 1) solid
+            , borderRadius <| px 6
+            , borderColor <| mediumGray
+            , top zero
+            , bottom zero
+            , right zero
+            , left zero
+            , margin auto
+            , displayFlex
+            , justifyContent center
+            , padding <| px 16
+            , boxShadow5 zero zero (px 24) (px -8) mediumGray
+            , zIndex <| int 999
+            , flexDirection column
+            ]
+        , class InfoDialogHelp
+            [ fontSize <| em 1.1
+            , padding <| px 8
+            ]
+        , class InfoDialogHelpTitle
+            [ fontSize <| em 1.25
+            , fontWeight <| int 600
+            , paddingBottom <| px 16
+            ]
+        , class InfoDialogOther
+            [ color Colors.gray
+            , paddingTop <| px 16
+            , padding <| px 8
+            ]
+        , class Hidden
+            [ display none
             ]
         ]
 

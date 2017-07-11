@@ -122,6 +122,7 @@ formatLink url =
         "http://" ++ url
 
 
+
 ----------
 -- View --
 ----------
@@ -225,7 +226,7 @@ viewTableRow model bookmark =
                     , target "_blank"
                     ]
                     [ text bookmark.url ]
-                    ]
+                ]
             , viewTableCell
                 [ class [ Style.Description ]
                 ]
