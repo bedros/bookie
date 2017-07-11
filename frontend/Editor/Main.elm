@@ -1,6 +1,7 @@
 module Editor.Main exposing (..)
 
 import Bookmark exposing (Bookmark)
+import Constants
 import Editor.Style as Style
 import Html exposing (..)
 import Html.CssHelpers
@@ -85,18 +86,16 @@ update msg model =
                 case model.bookmark of
                     Just bookmark ->
                         if (bookmark.title /= "" && bookmark.url /= "") then
-                            case bookmark.id of
-                                (-1) ->
-                                    ( newModel
-                                    , EditorSaveNew bookmarkOut
-                                    , Cmd.none
-                                    )
-
-                                _ ->
-                                    ( { model | bookmark = Nothing }
-                                    , EditorSave bookmarkOut
-                                    , Cmd.none
-                                    )
+                            if bookmark.id == Constants.default_id then
+                                ( newModel
+                                , EditorSaveNew bookmarkOut
+                                , Cmd.none
+                                )
+                            else
+                                ( { model | bookmark = Nothing }
+                                , EditorSave bookmarkOut
+                                , Cmd.none
+                                )
                         else
                             ( model, NoOp, Cmd.none )
 

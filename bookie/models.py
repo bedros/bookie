@@ -13,7 +13,7 @@ Base = declarative_base()
 
 
 class _JSONSeriallizable():
-    def dumps(self):
+    def dump(self):
         raise NotImplementedError( 'dumps not implemented in subclass '
                                  + self.__class__.__name__
                                  )

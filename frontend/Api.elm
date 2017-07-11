@@ -11,7 +11,7 @@ type Msg
 
 
 type ApiMsg
-    = ApiConfirmation Data
+    = ApiBookmarkConfirmation Data
     | ApiData Data
     | ApiError Error
     | ApiNetworkError String
@@ -53,6 +53,38 @@ update msg =
 -----------
 -- Utils --
 -----------
+
+
+
+handleResponse : Value -> ApiMsg
+handleResponse value =
+    case JsonD.decodeValue (JsonD.field "type" JsonD.string) value of
+        Ok type_ ->
+            case type_ of
+                "bookmarks" ->
+                    ApiData (Data type_ (decodeData value))
+
+                "bookmarks insert confirmation" ->
+                    ApiBookmarkConfirmation (Data type_ (decodeData value))
+
+                "bookmarks update confirmation" ->
+                    ApiBookmarkConfirmation (Data type_ (decodeData value))
+
+                "bookmarks delete confirmation" ->
+                    ApiBookmarkConfirmation (Data type_ (decodeData value))
+
+                "error" ->
+                    let
+                        ( error_type, error_message ) =
+                            decodeError value
+                    in
+                        ApiError (Error error_type error_message)
+
+                _ ->
+                    ApiError (Error "unknown type" type_)
+
+        Err error ->
+            ApiError (Error "decoding" error)
 
 
 bookmarksApiAddress : String
@@ -126,31 +158,6 @@ submitJson method url body =
         , timeout = Nothing
         , withCredentials = False
         }
-
-
-handleResponse : Value -> ApiMsg
-handleResponse value =
-    case JsonD.decodeValue (JsonD.field "type" JsonD.string) value of
-        Ok type_ ->
-            case type_ of
-                "bookmarks" ->
-                    ApiData (Data type_ (decodeData value))
-
-                "bookmarks confirmation" ->
-                    ApiConfirmation (Data type_ (decodeData value))
-
-                "error" ->
-                    let
-                        ( error_type, error_message ) =
-                            decodeError value
-                    in
-                        ApiError (Error error_type error_message)
-
-                _ ->
-                    ApiError (Error "unknown type" type_)
-
-        Err error ->
-            ApiError (Error "decoding" error)
 
 
 decodeError : Value -> ( String, String )

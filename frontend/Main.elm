@@ -3,6 +3,7 @@ module Main exposing (..)
 import Api
 import Bookmark exposing (Bookmark, encoder)
 import Browser.Main as Browser
+import Constants
 import Debug exposing (log)
 import Dict
 import Editor.Main as Editor
@@ -15,6 +16,7 @@ import Msg exposing (..)
 import Result
 import Search.Main as Search
 import Style exposing (CssIds, CssClasses)
+import Maybe exposing (withDefault)
 
 
 main : Program Never Model Msg
@@ -66,12 +68,38 @@ update msg model =
                     Api.update response
             in
                 case apiMsg of
-                    Api.ApiConfirmation data ->
-                        let
-                            _ =
-                                log "API confirmation" data
-                        in
-                            model ! [ Cmd.none ]
+                    Api.ApiBookmarkConfirmation data ->
+                        case data.type_ of
+                            "bookmarks insert confirmation" ->
+                                let
+                                    id =
+                                        case JsonD.decodeValue Bookmark.decodeId data.data of
+                                            Ok id_ ->
+                                                id_
+
+                                            Err error ->
+                                                let
+                                                    _ =
+                                                        log "Error decoding id of new bookmark" error
+
+                                                in
+                                                    Dict.keys model.bookmarks
+                                                        |> List.maximum
+                                                        |> withDefault (Constants.default_id - 1)
+                                                        |> (+) 1
+
+                                    bookmarks =
+                                            setNewBookmarkId id model.bookmarks
+
+                                in
+                                    { model
+                                        | bookmarks = bookmarks
+                                        , displayedBookmarks = bookmarks
+                                    }
+                                        ! [ Cmd.none ]
+
+                            _ ->
+                                model ! [ Cmd.none ]
 
                     Api.ApiData data ->
                         let
@@ -251,6 +279,17 @@ insertBookmark : Dict.Dict Int Bookmark -> Bookmark -> Dict.Dict Int Bookmark
 insertBookmark bookmarks bookmark =
     Dict.insert bookmark.id bookmark bookmarks
 
+
+setNewBookmarkId : Int -> Dict.Dict Int Bookmark -> Dict.Dict Int Bookmark
+setNewBookmarkId id bookmarks =
+    let
+        bookmark = withDefault (Bookmark.empty) (Dict.get Constants.default_id bookmarks)
+
+        bookmarkUpdated = { bookmark | id = id }
+
+    in
+        Dict.insert id bookmarkUpdated bookmarks
+            |> Dict.remove Constants.default_id
 
 
 ----------

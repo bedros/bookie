@@ -1,5 +1,13 @@
-module Bookmark exposing (Bookmark, empty, decoder, encoder)
+module Bookmark exposing ( Bookmark
+                         , empty
+                         , decoder
+                         , decodeId
+                         , decodeTitle
+                         , decodeUrl
+                         , decodeDescription
+                         , encoder)
 
+import Constants
 import Json.Decode as JsonD
 import Json.Encode as JsonE
 import Maybe exposing (withDefault)
@@ -15,17 +23,37 @@ type alias Bookmark =
 
 empty : Bookmark
 empty =
-    Bookmark -1 "" "" Nothing
+    Bookmark Constants.default_id "" "" Nothing
 
 
 decoder : JsonD.Decoder Bookmark
 decoder =
     JsonD.map4
         Bookmark
-        (JsonD.field "id" JsonD.int)
-        (JsonD.field "title" JsonD.string)
-        (JsonD.field "url" JsonD.string)
-        (JsonD.field "description" (JsonD.nullable JsonD.string))
+        decodeId
+        decodeTitle
+        decodeUrl
+        decodeDescription
+
+
+decodeId : JsonD.Decoder Int
+decodeId =
+    JsonD.field "id" JsonD.int
+
+
+decodeTitle : JsonD.Decoder String
+decodeTitle =
+    JsonD.field "title" JsonD.string
+
+
+decodeUrl : JsonD.Decoder String
+decodeUrl =
+    JsonD.field "url" JsonD.string
+
+
+decodeDescription : JsonD.Decoder (Maybe String)
+decodeDescription =
+    JsonD.field "url" (JsonD.nullable JsonD.string)
 
 
 encoder : Bookmark -> JsonE.Value
