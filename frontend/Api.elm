@@ -88,7 +88,7 @@ handleResponse value =
 
 bookmarksApiAddress : String
 bookmarksApiAddress =
-    "http://localhost:5000/api/bookmarks"
+    "/api/bookmarks"
 
 
 {-| msg is a wrapper type that will be provided by the client.
