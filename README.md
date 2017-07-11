@@ -13,13 +13,9 @@ Create a virtualenv and activate it, then run
     pip install -r requirements.txt
 
 If no database file exists for sqlite (only one supported at the moment), run
-this before launching the server (but remember to do `unset DB_CREATE` afterwards to avoid having the app try to recreate the server each time the server starts up)
+this before launching the server
 
-    export CREATE_DB=1
-
-Install the `bookie` project
-
-    pip install --editable .
+    scripts/init_db.py
     
 To compile the frontend Elm code you will need to install the following (`-g` is optional and can be inserted in the following command after the word `install`)
 
