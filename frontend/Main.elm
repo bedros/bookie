@@ -8,7 +8,7 @@ import Debug exposing (log)
 import Dict
 import Editor.Main as Editor
 import Html exposing (a, Html, div, program, button, text)
-import Html.Attributes exposing (href)
+import Html.Attributes exposing (href, target)
 import Html.CssHelpers
 import Html.Events exposing (onClick, onMouseEnter, onMouseLeave)
 import Json.Decode as JsonD
@@ -397,6 +397,8 @@ footer =
         [ div [] [ text "work in progress" ]
         , div [] [ text "|" ]
         , a
-            [ href "https://github.com/francium/bookie" ]
+            [ href "https://github.com/francium/bookie"
+            , target "_blank"
+            ]
             [ text "see on github" ]
         ]
