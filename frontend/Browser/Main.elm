@@ -114,6 +114,13 @@ sort sortable ascending bookmarks =
                     sorted
 
 
+formatLink : String -> String
+formatLink url =
+    if String.contains "//" url then
+        url
+    else
+        "http://" ++ url
+
 
 ----------
 -- View --
@@ -214,7 +221,7 @@ viewTableRow model bookmark =
                 [ class [ Style.Url ]
                 ]
                 [ a
-                    [ href bookmark.url
+                    [ href (formatLink bookmark.url)
                     , target "_blank"
                     ]
                     [ text bookmark.url ]
