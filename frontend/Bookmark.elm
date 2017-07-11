@@ -56,7 +56,7 @@ decodeUrl =
 
 decodeDescription : JsonD.Decoder (Maybe String)
 decodeDescription =
-    JsonD.field "url" (JsonD.nullable JsonD.string)
+    JsonD.field "description" (JsonD.nullable JsonD.string)
 
 
 encoder : Bookmark -> JsonE.Value
