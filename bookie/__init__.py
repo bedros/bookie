@@ -6,8 +6,13 @@ from bookie.config import config
 from bookie.data_manager import DataManager
 
 
+if config.heroku:
+    create_db = True
+else:
+    create_db = False
+
 app = Flask(__name__)
-dm = DataManager(config.database)
+dm = DataManager(config.database, create_db)
 
 import bookie.views
 import bookie.routing.api

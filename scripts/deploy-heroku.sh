@@ -21,16 +21,16 @@ git merge master
 echo
 echo "Compiling the frontend code..."
 echo "---------------------------------------------------------"
-make frontend_prod
+make frontend
 
 echo
 echo "Creating a config.json file..."
 echo "---------------------------------------------------------"
 cat > config.json <<- EOM
 {
-    "database_provider": "sqlite",
-    "database_uri": "heroku.db",
-    "debug": "false"
+    "database_provider": "postgresql+psycopg2",
+    "debug": "true",
+    "heroku": "true"
 }
 EOM
 
@@ -45,15 +45,10 @@ echo "---------------------------------------------------------"
 pip install -r requirements.txt
 
 echo
-echo "Launching server to create a initial database..."
-echo "---------------------------------------------------------"
-scripts/init_db.py
-
-echo
 echo "Adding fresh heroku.db database for deployment..."
 echo "---------------------------------------------------------"
 git add -f heroku.db config.json bookie/static/dist
-git commit -m "sciprt :: Added heroku.db for deployment."
+git commit --allow-empty -m "sciprt :: deployment to heroku."
 
 echo
 echo "Pushing to heroku..."
