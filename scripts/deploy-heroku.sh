@@ -14,6 +14,11 @@ if [ $? != 0 ]; then
 fi
 
 echo
+echo "Merging in master..."
+echo "---------------------------------------------------------"
+git merge master
+
+echo
 echo "Compiling the frontend code..."
 echo "---------------------------------------------------------"
 make frontend_prod
