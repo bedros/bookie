@@ -8,7 +8,10 @@ class Config:
     def __init__(self, json_dict):
         self.database_provider = json_dict['database_provider']
 
-        self.heroku = json_dict['heroku']
+        try:
+            self.heroku = json_dict['heroku']
+        except KeyError:
+            self.heroku = False
 
         if self.database_provider == 'sqlite':
             self.database_uri = json_dict['database_uri']
@@ -17,7 +20,6 @@ class Config:
                             + self.database_uri
 
         elif self.database_provider == 'postgresql+psycopg2':
-            self.heroku = True
             urlparse.uses_netloc.append("postgres")
             url = urlparse.urlparse(os.environ["DATABASE_URL"])
 

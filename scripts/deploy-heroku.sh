@@ -29,7 +29,7 @@ echo "---------------------------------------------------------"
 cat > config.json <<- EOM
 {
     "database_provider": "postgresql+psycopg2",
-    "debug": "true",
+    "debug": "false",
     "heroku": "true"
 }
 EOM
@@ -45,9 +45,9 @@ echo "---------------------------------------------------------"
 pip install -r requirements.txt
 
 echo
-echo "Adding fresh heroku.db database for deployment..."
+echo "Staging file for commit..."
 echo "---------------------------------------------------------"
-git add -f heroku.db config.json bookie/static/dist
+git add -f config.json bookie/static/dist
 git commit --allow-empty -m "sciprt :: deployment to heroku."
 
 echo

@@ -7,9 +7,9 @@ from bookie.data_manager import DataManager
 
 
 if config.heroku:
-    create_db = True
-else:
     create_db = False
+else:
+    create_db = True
 
 app = Flask(__name__)
 dm = DataManager(config.database, create_db)
