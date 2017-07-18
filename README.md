@@ -1,5 +1,7 @@
 # Development Setup
 
+(Optional, override the default config values otherwise the following default
+config values would be used)
 In project root, create a `config.json`:
 
     {
@@ -13,12 +15,8 @@ Create a virtualenv and activate it, then run
 
     pip install -r requirements.txt
 
-If no database file exists for sqlite (only one supported at the moment), run
-this before launching the server
-
-    scripts/init_db.py
-    
-To compile the frontend Elm code you will need to install the following (`-g` is optional and can be inserted in the following command after the word `install`)
+To compile the frontend Elm code you will need to install the following
+(`-g` is optional)
 
     npm install -g elm elm-css
     
@@ -30,7 +28,7 @@ Start a debugging server
 
     make debug
     
-Open up `http://localhost:5000` in a browser
+Open up `http://localhost:5000` (default port) in a browser
     
 # Issues
 

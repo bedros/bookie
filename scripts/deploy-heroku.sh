@@ -29,8 +29,8 @@ echo "---------------------------------------------------------"
 cat > config.json <<- EOM
 {
     "database_provider": "postgresql+psycopg2",
-    "debug": "false",
-    "heroku": "true"
+    "heroku": true,
+    "debug": "false"
 }
 EOM
 
