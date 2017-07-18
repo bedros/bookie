@@ -13,6 +13,11 @@ class Config:
         except KeyError:
             self.heroku = False
 
+        try:
+            self.port = json_dict['port']
+        except KeyError:
+            self.port = 5000
+
         if self.database_provider == 'sqlite':
             self.database_uri = json_dict['database_uri']
             self.database = self.database_provider \

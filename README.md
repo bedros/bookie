@@ -5,7 +5,8 @@ In project root, create a `config.json`:
     {
         "database_provider": "sqlite",
         "database_uri": "dev.db",
-        "debug": "true"
+        "debug": "true",
+        "port": 5000
     }
 
 Create a virtualenv and activate it, then run
