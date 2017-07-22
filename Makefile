@@ -19,3 +19,6 @@ style:
 
 format:
 	elm-format --yes .
+
+deploy_heroku:
+	scripts/deploy-heroku.sh

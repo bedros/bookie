@@ -37,7 +37,13 @@ EOM
 echo
 echo "Creating a virtualenv..."
 echo "---------------------------------------------------------"
-virtualenv venv
+if [ ! -d venv ]; then
+    echo "No virtualenv directory, './venv', found."
+    exit 1
+else
+    PS1=''  # Strict mode will fail script if PS1 is an unbound variable.
+    . venv/bin/activate
+fi
 
 echo
 echo "Installing pip requirements..."
