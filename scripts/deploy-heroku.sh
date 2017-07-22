@@ -35,22 +35,6 @@ cat > config.json <<- EOM
 EOM
 
 echo
-echo "Creating a virtualenv..."
-echo "---------------------------------------------------------"
-if [ ! -d venv ]; then
-    echo "No virtualenv directory, './venv', found."
-    exit 1
-else
-    PS1=''  # Strict mode will fail script if PS1 is an unbound variable.
-    . venv/bin/activate
-fi
-
-echo
-echo "Installing pip requirements..."
-echo "---------------------------------------------------------"
-pip install -r requirements.txt
-
-echo
 echo "Staging file for commit..."
 echo "---------------------------------------------------------"
 git add -f config.json bookie/static/dist
