@@ -47,7 +47,7 @@ class Config:
     def try_parse_option(self, config, option, default):
         """
         Try to read an option, return default if KeyError.
-        
+
         :param config: Dictionary of config options.
         :param option: Key of the option.
         :param default: Default value in case of KeyError.

@@ -6,6 +6,9 @@ from bookie.config import config
 from bookie.data_manager import DataManager
 
 
+VERSION = ('0.1.0', 'timid tayra')
+
+
 if config.heroku:
     create_db = False
 else:
