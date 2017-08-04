@@ -8,17 +8,13 @@ from bookie.models import Base
 
 
 class DataManager:
-    def __init__(self, database, create_db=False):
+    def __init__(self, database):
+        print('Using database:', database)
         self.database = database
         self.engine = create_engine(self.database)
         self.DBSession = sessionmaker(bind=self.engine)
-
         self.session = None
-
-        if create_db:
-            Base.metadata.create_all(self.engine)
-        else:
-            Base.metadata.bind = self.engine
+        Base.metadata.create_all(self.engine)
 
     def get(self, model, id_):
         return self.with_session(self._get, [model, id_])

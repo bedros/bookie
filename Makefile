@@ -1,8 +1,5 @@
-debug:
-	FLASK_APP=bookie FLASK_DEBUG=1 flask run
-
-init:
-	scripts/init.sh
+serve:
+	FLASK_APP=bookie flask run
 
 frontend: elm style
 

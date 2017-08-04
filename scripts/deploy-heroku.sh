@@ -24,7 +24,7 @@ echo "---------------------------------------------------------"
 make frontend_prod
 
 echo
-echo "Creating a config.json file..."
+echo "Creating a config.py file..."
 echo "---------------------------------------------------------"
 cat > config.json <<- EOM
 {

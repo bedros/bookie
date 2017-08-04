@@ -21,7 +21,7 @@ import Maybe exposing (withDefault)
 
 version : ( String, String )
 version =
-    ( "0.1.0", "timid tayra" )
+    ( "0.2.0-dev", "reflexive rhea" )
 
 
 main : Program Never Model Msg
