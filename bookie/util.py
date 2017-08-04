@@ -6,11 +6,14 @@ from bookie.config import ProductionConfig, DevelopmentConfig
 
 
 def configure_flask_app(app):
-    if os.environ['BOOKIE_ENV'] in ('prod', 'production'):
-        config = ProductionConfig
-    elif os.environ['BOOKIE_ENV'] in ('dev', 'development'):
-        config = DevelopmentConfig
-    else:
+    try:
+        if os.environ['BOOKIE_ENV'] in ('prod', 'production'):
+            config = ProductionConfig
+        elif os.environ['BOOKIE_ENV'] in ('dev', 'development'):
+            config = DevelopmentConfig
+        else:
+            config = ProductionConfig
+    except KeyError:
         config = ProductionConfig
 
     # Default config
