@@ -1,8 +1,6 @@
-# bookie - your bookmark manager
+# bookie - a bookmark manager
 
-Master [![Build Status](https://travis-ci.org/francium/bookie.svg?branch=master)](https://travis-ci.org/francium/bookie)
-|
-Develop [![Build Status](https://travis-ci.org/francium/bookie.svg?branch=develop)](https://travis-ci.org/francium/bookie)
+[![Build Status](https://travis-ci.org/francium/bookie.svg?branch=develop)](https://travis-ci.org/francium/bookie)
 
 
 ## Quickstart
