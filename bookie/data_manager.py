@@ -4,11 +4,13 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
 
+from bookie.i_data_manager import IDataManager
 from bookie.models import Base
 
 
-class DataManager:
+class DataManager(IDataManager):
     def __init__(self, database):
+        # FIXME logging
         print('Using database:', database)
         self.database = database
         self.engine = create_engine(self.database)
@@ -59,7 +61,7 @@ class DataManager:
     def _to_dict(self, model_inst):
         '''
         :param model_inst:
-        :return: Dictionary of the model instance with nulls filterd out.
+        :return: Dictionary of the model instance with nulls filtered out.
         '''
         return {k:v for (k,v) in model_inst.dump().items() if v}
 

@@ -2,7 +2,7 @@
 
 import os
 
-from bookie.config import ProductionConfig, DevelopmentConfig
+from bookie.config import ProductionConfig, DevelopmentConfig, TestingConfig
 
 
 def configure_flask_app(app):
@@ -11,6 +11,8 @@ def configure_flask_app(app):
             config = ProductionConfig
         elif os.environ['BOOKIE_ENV'] in ('dev', 'development'):
             config = DevelopmentConfig
+        elif os.environ['BOOKIE_ENV'] in ('test', 'testing'):
+            config = TestingConfig
         else:
             config = ProductionConfig
     except KeyError:

@@ -1,14 +1,20 @@
 serve:
 	FLASK_APP=bookie flask run
 
+test.backend:
+	python -m unittest -v
+
+test.frontend:
+	echo "TODO"
+
 frontend: elm style
 
-frontend_prod: elm_prod style
+frontend.prod: elm_prod style
 
 elm:
 	elm-make frontend/Main.elm --output bookie/static/dist/main.js --warn --debug
 
-elm_prod:
+elm.prod:
 	elm-make frontend/Main.elm --output bookie/static/dist/main.js
 
 style:
@@ -17,5 +23,5 @@ style:
 format:
 	elm-format --yes .
 
-deploy_heroku:
+deploy.heroku:
 	scripts/deploy-heroku.sh
