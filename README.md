@@ -1,16 +1,16 @@
 # bookie - your bookmark manager
 
+Master [![Build Status](https://travis-ci.org/francium/bookie.svg?branch=master)](https://travis-ci.org/francium/bookie)
+|
+Develop [![Build Status](https://travis-ci.org/francium/bookie.svg?branch=develop)](https://travis-ci.org/francium/bookie)
+
 
 ## Quickstart
+
 TODO
 
-## Demo
-<div style="width: 100%; height: 0px; position: relative; padding-bottom: 56.250%;">
-    <iframe src="https://streamable.com/s/hl330/pmjasp"
-            frameborder="0" width="100%" height="100%" allowfullscreen
-            style="width: 100%; height: 100%; position: absolute;">
-    </iframe>
-</div>
+
+## [Demo](https://streamable.com/s/hl330/pmjasp)
 
 
 ## Issues
