@@ -1,5 +1,3 @@
-import os
-
 from bookie import util, factory
 from bookie.data_manager import DataManager
 

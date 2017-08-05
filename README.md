@@ -1,4 +1,25 @@
-# Development Setup
+# bookie - your bookmark manager
+
+
+## Quickstart
+TODO
+
+## Demo
+<div style="width: 100%; height: 0px; position: relative; padding-bottom: 56.250%;">
+    <iframe src="https://streamable.com/s/hl330/pmjasp"
+            frameborder="0" width="100%" height="100%" allowfullscreen
+            style="width: 100%; height: 100%; position: absolute;">
+    </iframe>
+</div>
+
+
+## Issues
+
+If something doesn't work right or something is missing, please report it as an
+issue at [github.com/francium/bookie/issues](github.com/francium/bookie/issues)
+
+
+## Development Setup
 
 (Optional, override the default config values otherwise the following default
 config values would be used)
@@ -29,8 +50,3 @@ Start a debugging server
     make debug
     
 Open up `http://localhost:5000` (default port) in a browser
-    
-# Issues
-
-If something doesn't work right or something is missing, please report it as an
-issue at [github.com/francium/bookie/issues](github.com/francium/bookie/issues)
