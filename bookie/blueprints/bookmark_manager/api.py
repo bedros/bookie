@@ -1,5 +1,7 @@
 # TODO: Document API using a doctool
 
+import logging
+
 import flask_restful
 from flask import current_app
 from webargs import fields
@@ -7,6 +9,9 @@ from webargs.flaskparser import use_kwargs
 
 from bookie import models
 from .app import bookmark_manager
+
+
+logger = logging.getLogger(__name__)
 
 
 class Api:
@@ -37,7 +42,8 @@ class Bookmarks(flask_restful.Resource):
                 return wrap_response(self, self._resource, bookmark)
 
             except LookupError as le:
-                # FIXME: Logging
+                logger.exception('Unable to lookup bookmark with id {}'
+                                 .format(id_))
                 return wrap_response(self, self._resource, [])
 
         elif title:
@@ -65,11 +71,11 @@ class Bookmarks(flask_restful.Resource):
                              bookmark.dump()
                              )
 
-    @use_kwargs({ 'id_': fields.Int(required=True)
-                , 'title': fields.String(missing=None)
-                , 'url': fields.String(missing=None)
-                , 'description': fields.String(missing=None)
-                })
+    @use_kwargs({'id_': fields.Int(required=True),
+                 'title': fields.String(missing=None),
+                 'url': fields.String(missing=None),
+                 'description': fields.String(missing=None),
+                 })
     def put(self, id_, title, url, description):
         bookmark = models.Bookmark(title=title,
                                    url=url,

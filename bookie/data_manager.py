@@ -1,5 +1,6 @@
 from traceback import print_exc
 
+import logging
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
@@ -8,10 +9,12 @@ from bookie.i_data_manager import IDataManager
 from bookie.models import Base
 
 
+logger = logging.getLogger(__name__)
+
+
 class DataManager(IDataManager):
     def __init__(self, database):
-        # FIXME logging
-        print('Using database:', database)
+        logger.debug('Using database {}'.format(database))
         self.database = database
         self.engine = create_engine(self.database)
         self.DBSession = sessionmaker(bind=self.engine)
@@ -85,7 +88,8 @@ class DataManager(IDataManager):
             raise le
 
         except Exception as e:
-            print_exc()
+            logging.exception('Exception occurred while executing a function '
+                              'within a session')
             self.session.rollback()
 
         finally:
