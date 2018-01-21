@@ -6,7 +6,9 @@ setup(
     packages=['bookie'],
     include_package_data=True,
     install_requires=[
+        'click',
         'flask',
-        'sqlalchemy'
+        'sqlalchemy',
+        'werkzeug',
     ],
 )

@@ -1,7 +1,9 @@
 -e ./
-gevent
-gunicorn
 Flask-RESTful==0.3.6
 SQLAlchemy==1.1.10
-webargs==1.7.0
+click
+gevent
+gunicorn
 psycopg2
+webargs==1.7.0,
+werkzeug
