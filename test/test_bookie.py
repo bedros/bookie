@@ -1,15 +1,13 @@
 import os
 from unittest import TestCase
 
-from bookie import factory
-from test.mock_data_manager import MockDataManager
+from bookie.app_factory import create_app
 
 
 class TestBookie(TestCase):
     def setUp(self):
         os.environ['BOOKIE_ENV'] = 'testing'
-        self.app = factory.create_app().test_client()
-        self.app.data_manager = MockDataManager()
+        self.app = create_app().test_client()
 
     def testRouteIndex(self):
         response_html = '\n'.join(('<body>',

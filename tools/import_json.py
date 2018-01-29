@@ -1,8 +1,8 @@
 import json
 import sys
 
-from bookie.models import Bookmark
-from bookie.data_manager import DataManager as DM
+from bookie.blueprints.bookmark_manager.models import Bookmark
+from bookie.foobaz_data_manager import DataManager as DM
 
 
 def insert_list(data):

@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from bookie.models import *
+from bookie.blueprints.bookmark_manager.models import *
 
 
 class TestBookmark(TestCase):
@@ -15,8 +15,8 @@ class TestBookmark(TestCase):
         self.assertIsNotNone(self.bookmark.modified)
         self.assertEqual(len(self.bookmark.tags), 0)
 
-    def testBookmarkCanBeAssignedABookmarkTag(self):
-        tag = BookmarkTag('qux')
+    def testBookmarkCanBeAssignedATag(self):
+        tag = Tag('qux')
 
         self.bookmark.tags.append(tag)
 

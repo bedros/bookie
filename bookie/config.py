@@ -1,7 +1,8 @@
 class Config(object):
     DEBUG = False
     TESTING = False
-    DATABASE_URI = 'sqlite://'  # in memory database
+    SQLALCHEMY_DATABASE_URI = 'sqlite://'  # In memory database
+    SQLALCHEMY_TRACK_MODIFICATIONS = False  # enabled by Flask SQLAlchemy
     PORT = 8888
 
 

@@ -3,10 +3,34 @@
 import logging
 import os
 
-from bookie.config import ProductionConfig, DevelopmentConfig, TestingConfig
+from flask import Flask
+
+from . import extensions
+from .blueprints.bookmark_manager import bookmark_manager_bp
+from .config import ProductionConfig, DevelopmentConfig, TestingConfig
 
 
-def configure_flask_app(app):
+def create_app() -> Flask:
+    instance_path = os.path.join(os.path.expanduser('~'), '.config/bookie')
+    app = Flask(__name__,
+                instance_path=instance_path,
+                instance_relative_config=True)
+    configure_flask_app(app)
+    register_extensions(app)
+    register_blueprints(app)
+
+    return app
+
+
+def register_extensions(app: Flask) -> None:
+    extensions.db.init_app(app)
+
+
+def register_blueprints(app: Flask) -> None:
+    app.register_blueprint(bookmark_manager_bp)
+
+
+def configure_flask_app(app) -> None:
     try:
         if os.environ['BOOKIE_ENV'] in ('prod', 'production'):
             config = ProductionConfig
@@ -44,8 +68,3 @@ def set_logging_level(is_debug: bool):
         return logging.DEBUG
     else:
         return logging.INFO
-
-
-def truncate_str(string, length):
-    return (string[:length] + '...') if (len(string) > length) \
-                                     else string
