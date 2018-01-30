@@ -3,8 +3,8 @@ Flask-RESTful
 Flask-SQLAlchemy
 SQLAlchemy
 click
+python-dateutil
 gevent
 gunicorn
-psycopg2
 webargs==1.7.0
 werkzeug

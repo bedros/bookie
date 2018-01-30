@@ -10,6 +10,8 @@ setup(
         'Flask-SQLAlchemy',
         'SQLAlchemy',
         'click',
+        'python-dateutil'
+        'pytz',
         'webargs',
         'werkzeug',
     ],

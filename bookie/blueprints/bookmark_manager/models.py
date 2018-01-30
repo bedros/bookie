@@ -1,9 +1,11 @@
 """Application models"""
 
 from datetime import datetime
+from typing import Dict, Any, Optional
+
+from dateutil.tz import tzutc
 
 from bookie.extensions import db
-from .utils import datetime_utils
 from .utils import string_utils
 
 __all__ = ['Bookmark', 'Tag']
@@ -31,11 +33,11 @@ class Bookmark(db.Model, BookieModel):
     )
 
     def __init__(self,
-                 title,
-                 url,
-                 notes='',
-                 modified=datetime.now(),
-                 created=datetime.now(),
+                 title: str,
+                 url: str,
+                 notes: str = '',
+                 modified: datetime = datetime.now(tzutc()),
+                 created: Optional[datetime] = datetime.now(tzutc()),
                  **kwargs):
         db.Model.__init__(self, **kwargs)
 
@@ -56,13 +58,13 @@ class Bookmark(db.Model, BookieModel):
                 f'created=({self.created}), '
                 f'tags=({len(self.tags)} tags)>')
 
-    def dump(self):
+    def dump(self) -> Dict[str, Any]:
         return {'id': self.id,
                 'title': self.title,
                 'url': self.url,
                 'notes': self.notes,
-                'modified': datetime_utils.datetime_dump(self.modified),
-                'created': datetime_utils.datetime_dump(self.created),
+                'modified': self.modified.isoformat(),
+                'created': self.created.isoformat(),
                 'tags': [{'id': tag.id, 'name': tag.name} for tag in self.tags]}
 
 
@@ -76,7 +78,7 @@ class Tag(db.Model, BookieModel):
         lazy='noload'
     )
 
-    def __init__(self, name, **kwargs):
+    def __init__(self, name: str, **kwargs):
         db.Model.__init__(self, **kwargs)
 
         self.name = name
@@ -86,7 +88,7 @@ class Tag(db.Model, BookieModel):
         return (f'<name="{self.name}", '
                 f'bookmarks=({len(self.bookmarks)} bookmarks)>')
 
-    def dump(self):
+    def dump(self) -> Dict[str, Any]:
         dict_ = {'id': self.id,
                  'tag': self.name}
 

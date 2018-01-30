@@ -9,9 +9,11 @@ from sqlalchemy.orm.exc import NoResultFound
 from webargs import fields
 from webargs.flaskparser import use_kwargs
 
+from bookie.blueprints.bookmark_manager.api.common.utils import filter_dict
 from bookie.extensions import db
 from ..common import utils
 from ...models import Bookmark as BookmarkModel
+
 
 __all__ = ['Bookmark']
 
@@ -78,7 +80,6 @@ class Bookmark(Resource):
         finally:
             db.session.rollback()
 
-
     @use_kwargs({'id': fields.Int(required=True),
                  'title': fields.String(missing=None),
                  'url': fields.String(missing=None),
@@ -87,7 +88,13 @@ class Bookmark(Resource):
     def put(self, id, title, url, notes):
         # TODO tag handling
         try:
-            bookmark = BookmarkModel(title=title, url=url, notes=notes)
+            new_bookmark = BookmarkModel(title=title,
+                                         url=url,
+                                         notes=notes,
+                                         created=None)
+            bookmark = self._get_by_id(id)
+            for (k, v) in filter_dict(new_bookmark).items():
+                setattr(bookmark, k, v)
             db.session.commit()
             return utils.wrap_response(self._resource, bookmark.dump())
 
@@ -142,6 +149,6 @@ class Bookmark(Resource):
         '''
         :param id:
         :return:
-        :throws: NoResultFound
+        :raises: NoResultFound
         '''
         return BookmarkModel.query.filter_by(id=id).one()

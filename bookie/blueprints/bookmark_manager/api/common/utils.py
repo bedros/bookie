@@ -1,3 +1,6 @@
+from typing import Dict, Any
+
+
 def wrap_response(type_, data):
     """
     Wraps the response data in an object with some informative
@@ -28,3 +31,11 @@ def error_response(error_type, error_message):
     return {'type': 'error',
             'error_type': error_type,
             'error_message': error_message}
+
+
+def filter_dict(dict_: Dict[Any, Any]):
+    '''
+    :param dict_:
+    :return: Dictionary of the model instance with nulls filtered out.
+    '''
+    return {k:v for (k,v) in dict_.items() if v}
