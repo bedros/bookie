@@ -24,3 +24,12 @@ class TestBookmark(TestCase):
         self.bookmark.tags.append(tag)
         self.assertIn(tag, self.bookmark.tags)
         self.assertIn(self.bookmark, tag.bookmarks)
+
+    def test_bookmark_can_dump(self):
+        bookmark_dict = self.bookmark.dump()
+        self.assertEqual(bookmark_dict['title'], 'foo')
+        self.assertEqual(bookmark_dict['url'], 'bar')
+        self.assertEqual(bookmark_dict['notes'], '')
+        self.assertEqual(len(bookmark_dict['tags']), 0)
+        self.assertIsNotNone(bookmark_dict['created'])
+        self.assertIsNotNone(bookmark_dict['modified'])

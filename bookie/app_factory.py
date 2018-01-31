@@ -54,14 +54,15 @@ def configure_flask_app(app) -> None:
     logger = logging.getLogger(__name__)
 
     # Override value based on user config file
-    try:
-        # FIXME: Document
-        # Should slient option be used here to avoid error?
-        app.config.from_pyfile('config.py')
-        logger.info('Loading config from file {}'.format('config.py'))
-    except FileNotFoundError as e:
-        # FIXME: Document
-        logger.info('Using default config. Please see README.md')
+    if config != TestingConfig:
+        try:
+            # FIXME: Document
+            # Should slient option be used here to avoid error?
+            app.config.from_pyfile('config.py')
+            logger.info('Loading config from file {}'.format('config.py'))
+        except FileNotFoundError as e:
+            # FIXME: Document
+            logger.info('Using default config. Please see README.md')
 
 
 def set_logging_level(is_debug: bool):

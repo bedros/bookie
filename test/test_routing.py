@@ -4,12 +4,12 @@ from unittest import TestCase
 from bookie.app_factory import create_app
 
 
-class TestBookie(TestCase):
+class TestRouting(TestCase):
     def setUp(self):
         os.environ['BOOKIE_ENV'] = 'testing'
         self.app = create_app().test_client()
 
-    def testRouteIndex(self):
+    def test_route_index(self):
         response_html = '\n'.join(('<body>',
                                    '  <script>',
                                    '    app = Elm.Main.fullscreen();',

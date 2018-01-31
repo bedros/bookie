@@ -81,7 +81,8 @@ class Bookmark(db.Model, BookieModel):
              'modified': self.modified.isoformat() if self.modified else None,
              'created': self.created.isoformat() if self.created else None,
              'tags': [tag.dump() for tag in self.tags]},
-            'tags'
+            'tags',
+            'notes'
         )
 
 
@@ -107,7 +108,7 @@ class Tag(db.Model, BookieModel):
 
     def dump(self) -> Dict[str, Any]:
         return filter_dict({'id': self.id,
-                            'tag': self.name,
+                            'name': self.name,
                             'bookmarks': self.bookmarks})
 
 
