@@ -1,12 +1,15 @@
 """Application models"""
 
 from datetime import datetime
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Union
 
 from dateutil.tz import tzutc
 
+from bookie.blueprints.bookmark_manager.utils.datetime_utils import \
+    parse_iso8601
 from bookie.extensions import db
 from .utils import string_utils
+from .utils.utils import filter_dict
 
 __all__ = ['Bookmark', 'Tag']
 
@@ -36,17 +39,27 @@ class Bookmark(db.Model, BookieModel):
                  title: str,
                  url: str,
                  notes: str = '',
-                 modified: datetime = datetime.now(tzutc()),
-                 created: Optional[datetime] = datetime.now(tzutc()),
+                 modified: Optional[str] = datetime.now(tzutc()).isoformat(),
+                 created: Union[str, None] = datetime.now(tzutc()).isoformat(),
                  **kwargs):
+        '''
+        :param title:
+        :param url:
+        :param notes:
+        :param modified: If specified, the value is used, else defaults to
+          current date and time
+        :param created: None results in no value being set, else the value is
+          set or defaults to current date and time
+        :param kwargs:
+        '''
         db.Model.__init__(self, **kwargs)
 
         self.title = title
         self.url = url
         self.notes = notes
-        self.modified = modified
-        self.created = created
         self.tags = []  # SQLAlchemy backref
+        self.modified = parse_iso8601(modified)
+        self.created = parse_iso8601(created) if created is not None else None
 
     def __repr__(self):
         truncate_len = 10
@@ -59,13 +72,16 @@ class Bookmark(db.Model, BookieModel):
                 f'tags=({len(self.tags)} tags)>')
 
     def dump(self) -> Dict[str, Any]:
-        return {'id': self.id,
-                'title': self.title,
-                'url': self.url,
-                'notes': self.notes,
-                'modified': self.modified.isoformat(),
-                'created': self.created.isoformat(),
-                'tags': [{'id': tag.id, 'name': tag.name} for tag in self.tags]}
+        return filter_dict(
+            {'id': self.id,
+             'title': self.title,
+             'url': self.url,
+             'notes': self.notes,
+             'modified': self.modified.isoformat() if self.modified else None,
+             'created': self.created.isoformat() if self.created else None,
+             'tags': [tag.dump() for tag in self.tags]},
+            'tags'
+        )
 
 
 class Tag(db.Model, BookieModel):
@@ -89,12 +105,9 @@ class Tag(db.Model, BookieModel):
                 f'bookmarks=({len(self.bookmarks)} bookmarks)>')
 
     def dump(self) -> Dict[str, Any]:
-        dict_ = {'id': self.id,
-                 'tag': self.name}
-
-        if (self.bookmarks): dict_['bookmarks'] = self.bookmarks
-
-        return dict_
+        return filter_dict({'id': self.id,
+                            'tag': self.name,
+                            'bookmarks': self.bookmarks})
 
 
 bookmark_and_bookmark_tag_association_table = db.Table(

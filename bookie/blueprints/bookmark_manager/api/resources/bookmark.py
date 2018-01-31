@@ -9,11 +9,11 @@ from sqlalchemy.orm.exc import NoResultFound
 from webargs import fields
 from webargs.flaskparser import use_kwargs
 
-from bookie.blueprints.bookmark_manager.api.common.utils import filter_dict
 from bookie.extensions import db
 from ..common import utils
 from ...models import Bookmark as BookmarkModel
-
+from ...utils.utils import filter_dict
+from ...utils.datetime_utils import parse_iso8601
 
 __all__ = ['Bookmark']
 
@@ -61,14 +61,13 @@ class Bookmark(Resource):
 
     @use_kwargs({'title': fields.String(required=True),
                  'url': fields.String(required=True),
-                 'notes': fields.String(missing=''),
-                 'tags': fields.List(fields.String(), missing=[])})
-    def post(self, title, url, notes, tags):
+                 'notes': fields.String(missing='')})
+    def post(self, title, url, notes):
         # TODO tag handling
         bookmark = BookmarkModel(title=title, url=url, notes=notes)
 
         try:
-            db.session.insert(bookmark)
+            db.session.add(bookmark)
             db.session.commit()
             return utils.wrap_response(self._resource, bookmark.dump()), 201
 
@@ -83,18 +82,22 @@ class Bookmark(Resource):
     @use_kwargs({'id': fields.Int(required=True),
                  'title': fields.String(missing=None),
                  'url': fields.String(missing=None),
-                 'notes': fields.String(missing=''),
-                 'tags': fields.Nested(fields.String(), missing=[])})
+                 'notes': fields.String(missing='')})
     def put(self, id, title, url, notes):
         # TODO tag handling
         try:
             new_bookmark = BookmarkModel(title=title,
                                          url=url,
                                          notes=notes,
-                                         created=None)
+                                         created=None).dump()
+            new_bookmark['modified'] = parse_iso8601(new_bookmark['modified'])
+
             bookmark = self._get_by_id(id)
+
             for (k, v) in filter_dict(new_bookmark).items():
+                _logger.debug(f'Updating bookmark.{k} to {v}')
                 setattr(bookmark, k, v)
+
             db.session.commit()
             return utils.wrap_response(self._resource, bookmark.dump())
 
