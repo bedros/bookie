@@ -15,6 +15,7 @@ from ...models import Bookmark as BookmarkModel
 from ...utils.utils import filter_dict
 from ...utils.datetime_utils import parse_iso8601
 
+
 __all__ = ['Bookmark']
 
 _logger = getLogger(__name__)

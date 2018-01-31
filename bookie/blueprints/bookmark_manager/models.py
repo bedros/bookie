@@ -11,6 +11,7 @@ from bookie.extensions import db
 from .utils import string_utils
 from .utils.utils import filter_dict
 
+
 __all__ = ['Bookmark', 'Tag']
 
 

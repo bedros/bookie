@@ -1,10 +1,6 @@
 from unittest import TestCase
 
-from dateutil.tz import tzutc
-
 from bookie.blueprints.bookmark_manager.models import *
-from bookie.blueprints.bookmark_manager.utils.datetime_utils import \
-    parse_iso8601
 
 
 class TestBookmark(TestCase):

@@ -11,7 +11,6 @@ def wrap_response(type_, data):
             'data': data}
 
 
-# XXX Unused
 def error_response(error_type, error_message):
     """
     Create a error response.
