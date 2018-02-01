@@ -8,8 +8,8 @@ from bookie.extensions import db
 from bookie.blueprints.bookmark_manager.models import *
 
 
-NUM_BOOKMARKS = 5000
-NUM_TAGS = 125
+NUM_BOOKMARKS = 1000
+NUM_TAGS = 20
 
 
 def gibberish_word(length: int) -> str:
@@ -43,8 +43,8 @@ def generate_mock_data():
     for i in range(NUM_BOOKMARKS):
         title = gibberish_phrase(randint(1, 10))
         url = random_url(randint(1, 20))
-        selected_tags = choices(tags, k=max(1, int(gauss(1,3))))
-        bookmarks.append(Bookmark(title, url, tags=tags))
+        selected_tags = choices(tags, k=max(1, int(gauss(1, 3))))
+        bookmarks.append(Bookmark(title, url, tags=selected_tags))
 
     return bookmarks, tags
 
