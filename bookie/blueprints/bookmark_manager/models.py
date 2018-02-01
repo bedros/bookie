@@ -1,7 +1,8 @@
 """Application models"""
 
+
 from datetime import datetime
-from typing import Dict, Any, Optional, Union
+from typing import Any, Dict, Optional, Union
 
 from dateutil.tz import tzutc
 
@@ -88,7 +89,7 @@ class Bookmark(db.Model, BookieModel):
 
 class Tag(db.Model, BookieModel):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Text, nullable=False)
+    name = db.Column(db.Text, nullable=False, unique=True)
     bookmarks = db.relationship(
         'Bookmark',
         secondary=lambda: bookmark_and_bookmark_tag_association_table,
