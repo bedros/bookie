@@ -43,6 +43,7 @@ class Bookmark(db.Model, BookieModel):
                  notes: str = '',
                  modified: Optional[str] = datetime.now(tzutc()).isoformat(),
                  created: Union[str, None] = datetime.now(tzutc()).isoformat(),
+                 tags: Optional = [],
                  **kwargs):
         '''
         :param title:
@@ -59,7 +60,7 @@ class Bookmark(db.Model, BookieModel):
         self.title = title
         self.url = url
         self.notes = notes
-        self.tags = []  # SQLAlchemy backref
+        self.tags = tags  # SQLAlchemy backref
         self.modified = parse_iso8601(modified)
         self.created = parse_iso8601(created) if created is not None else None
 
