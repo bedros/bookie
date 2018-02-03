@@ -15,7 +15,6 @@ from webargs.flaskparser import use_kwargs
 from bookie.extensions import db
 from ..common import utils
 from ...models import Bookmark as BookmarkModel, Tag as TagModel
-from ...utils.datetime_utils import parse_iso8601
 from ...utils.utils import filter_dict
 
 
@@ -109,13 +108,11 @@ class Bookmark(Resource):
         :param new_tag_names: Append these tags
         '''
         try:
+            bookmark = self._get_by_id(id)
             new_bookmark = BookmarkModel(title=title,
                                          url=url,
                                          notes=notes,
                                          created=None).dump()
-            new_bookmark['modified'] = parse_iso8601(new_bookmark['modified'])
-
-            bookmark = self._get_by_id(id)
 
             for (k, v) in filter_dict(new_bookmark).items():
                 _logger.debug(f'Updating bookmark.{k} to {v}')

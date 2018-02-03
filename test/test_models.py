@@ -11,13 +11,13 @@ class TestBookmark(TestCase):
         self.assertEqual(self.bookmark.title, 'foo')
         self.assertEqual(self.bookmark.url, 'bar')
         self.assertEqual(self.bookmark.notes, '')
-        self.assertIsNotNone(self.bookmark.created)
+        self.assertIsNotNone(self.bookmark._created)
         self.assertIsNotNone(self.bookmark.modified)
         self.assertEqual(len(self.bookmark.tags), 0)
 
     def test_bookmark_can_initialize_with_no_created_property(self):
         bookmark = Bookmark('foo', 'bar', created=None)
-        self.assertIsNone(bookmark.created)
+        self.assertIsNone(bookmark._created)
 
     def test_bookmark_can_be_assigned_a_tag(self):
         tag = Tag('qux')

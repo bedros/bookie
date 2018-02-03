@@ -28,8 +28,8 @@ class Bookmark(db.Model, BookieModel):
     title = db.Column(db.Text, nullable=False)
     url = db.Column(db.Text, nullable=False)
     notes = db.Column(db.Text, nullable=False)
-    modified = db.Column(db.DateTime, nullable=False)
-    created = db.Column(db.DateTime, nullable=False)
+    _modified = db.Column(db.TIMESTAMP(timezone=True), nullable=False)
+    _created = db.Column(db.TIMESTAMP(timezone=True), nullable=False)
     tags = db.relationship(
         'Tag',
         secondary=lambda: bookmark_and_bookmark_tag_association_table,
@@ -61,8 +61,8 @@ class Bookmark(db.Model, BookieModel):
         self.url = url
         self.notes = notes
         self.tags = tags  # SQLAlchemy backref
-        self.modified = parse_iso8601(modified)
-        self.created = parse_iso8601(created) if created is not None else None
+        self._modified = parse_iso8601(modified)
+        self._created = parse_iso8601(created) if created is not None else None
 
     def __repr__(self):
         truncate_len = 10
@@ -74,14 +74,34 @@ class Bookmark(db.Model, BookieModel):
                 f'created=({self.created}), '
                 f'tags=({len(self.tags)} tags)>')
 
+    @property
+    def created(self) -> datetime:
+        return self._created.astimezone(tzutc())
+
+    @created.setter
+    def created(self, iso8601_timestamp: datetime):
+        self._created = parse_iso8601(iso8601_timestamp)
+
+    @property
+    def modified(self) -> datetime:
+        return self._modified.astimezone(tzutc())
+
+    @modified.setter
+    def modified(self, iso8601_timestamp: datetime):
+        self._modified = parse_iso8601(iso8601_timestamp)
+
     def dump(self) -> Dict[str, Any]:
         return filter_dict(
             {'id': self.id,
              'title': self.title,
              'url': self.url,
              'notes': self.notes,
-             'modified': self.modified.isoformat() if self.modified else None,
-             'created': self.created.isoformat() if self.created else None,
+             'modified':
+                 self.modified.astimezone(tzutc()).isoformat() if self.modified
+                                                               else None,
+             'created':
+                 self._created.astimezone(tzutc()).isoformat() if self._created
+                                                               else None,
              'tags': [tag.dump() for tag in self.tags]},
             'tags',
             'notes'
