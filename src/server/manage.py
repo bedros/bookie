@@ -1,11 +1,12 @@
 #!/bin/env python3
 
 import click
+import unittest
 from flask.helpers import get_debug_flag
 from werkzeug import script
 
-from bookie.app_factory import create_app
-from bookie.extensions import db
+from bookie_server.app_factory import create_app
+from bookie_server.extensions import db
 
 
 @click.group()
@@ -20,6 +21,14 @@ def run():
 
 
 @cli.command()
+def test():
+    loader = unittest.TestLoader()
+    suite = loader.discover(start_dir='test')
+    runner = unittest.TextTestRunner(verbosity=0)
+    runner.run(suite)
+
+
+@cli.command()
 def init():
     db.create_all(app=create_app())
 
@@ -29,25 +38,11 @@ def shell():
     app = create_app()
     db.create_all(app=app)
     with app.app_context():
-        from bookie.blueprints.bookmark_manager import models
+        from bookie_server.blueprints.bookmark_manager import models
         script.make_shell(lambda: {'models': models,
                                    'app': app,
                                    'db': db},
                           use_ipython=True)()
-
-
-# @shell.command()
-# @click.argument('database')
-# def models(database):
-#     from bookie.blueprints.bookmark_manager import models
-#
-#     engine = sa.create_engine(f'sqlite:///{database}')
-#     sa.ext.declarative.declarative_base().metadata.create_all(engine)
-#     session = sa.orm.sessionmaker(bind=engine)()
-#
-#     script.make_shell(lambda: {'models': models,
-#                                'session': session},
-#                       use_ipython=False)()
 
 
 if __name__ == '__main__':

@@ -6,9 +6,9 @@ from typing import Any, Dict, Optional, Union
 
 from dateutil.tz import tzutc
 
-from bookie.blueprints.bookmark_manager.utils.datetime_utils import \
+from bookie_server.blueprints.bookmark_manager.utils.datetime_utils import \
     parse_iso8601
-from bookie.extensions import db
+from bookie_server.extensions import db
 from .utils import string_utils
 from .utils.utils import filter_dict
 

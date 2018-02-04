@@ -1,0 +1,17 @@
+[[source]]
+
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+
+[packages]
+
+click = "*"
+gunicorn = "*"
+Werkzeug = "*"
+
+
+[dev-packages]
+
+"73aaf0a" = {path = "./src/server", editable = true}

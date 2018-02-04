@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from bookie.blueprints.bookmark_manager.models import *
+from bookie_server.blueprints.bookmark_manager.models import *
 
 
 class TestBookmark(TestCase):

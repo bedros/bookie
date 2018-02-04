@@ -12,7 +12,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from webargs import fields
 from webargs.flaskparser import use_kwargs
 
-from bookie.extensions import db
+from bookie_server.extensions import db
 from ..common import utils
 from ...models import Bookmark as BookmarkModel, Tag as TagModel
 from ...utils.utils import filter_dict

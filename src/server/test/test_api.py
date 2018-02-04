@@ -3,9 +3,9 @@ from json import loads
 from typing import Any, Dict
 from unittest import TestCase
 
-from bookie.app_factory import create_app
-from bookie.blueprints.bookmark_manager.models import Bookmark, Tag
-from bookie.extensions import db
+from bookie_server.app_factory import create_app
+from bookie_server.blueprints.bookmark_manager.models import Bookmark, Tag
+from bookie_server.extensions import db
 
 
 class TestResourceBookmark(TestCase):

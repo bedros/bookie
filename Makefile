@@ -1,27 +1,8 @@
-serve:
-	FLASK_APP=bookie flask run
+server.debug:
+	FLASK_DEBUG=1 src/bookie-server/manage.py run
 
-test.backend:
-	python -m unittest -v
-
-test.frontend:
-	echo "TODO"
-
-frontend: elm style
-
-frontend.prod: elm_prod style
-
-elm:
-	elm-make frontend/Main.elm --output bookie/static/dist/main.js --warn --debug
-
-elm.prod:
-	elm-make frontend/Main.elm --output bookie/static/dist/main.js
-
-style:
-	elm-css Stylesheets.elm
-
-format:
-	elm-format --yes .
+server.test:
+	src/bookie-server/manage.py test
 
 deploy.heroku:
 	scripts/deploy-heroku.sh

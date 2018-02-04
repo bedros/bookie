@@ -1,12 +1,5 @@
-# Config
-/config.json
-
-# Database
+# SQLite databases
 *.db
-
-# Elm
-elm-stuff/
-bookie/static/dist/
 
 # Python
 *.egg-info

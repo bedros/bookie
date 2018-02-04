@@ -3,9 +3,9 @@
 
 from random import gauss, randint, choice, choices
 
-from bookie.app_factory import create_app
-from bookie.extensions import db
-from bookie.blueprints.bookmark_manager.models import *
+from bookie_server.app_factory import create_app
+from bookie_server.extensions import db
+from bookie_server.blueprints.bookmark_manager.models import *
 
 
 NUM_BOOKMARKS = 1000

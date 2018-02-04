@@ -1,7 +1,7 @@
 import os
 from unittest import TestCase
 
-from bookie.app_factory import create_app
+from bookie_server.app_factory import create_app
 
 
 class TestRouting(TestCase):

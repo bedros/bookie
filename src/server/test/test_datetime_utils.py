@@ -3,7 +3,7 @@ from unittest import TestCase
 
 import dateutil
 
-from bookie.blueprints.bookmark_manager.utils.datetime_utils import \
+from bookie_server.blueprints.bookmark_manager.utils.datetime_utils import \
     parse_iso8601
 
 
