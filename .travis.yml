@@ -1,4 +1,13 @@
 language: python
 python: "3.6"
-install: "pip install -r requirements.txt"
+
+env:
+  - PIPENV_SHELL_COMPAT=1
+  - PIPENV_COLORBLIND=true
+  - PIPENV_NOSPIN=true
+
+install:
+  - pip install pipenv
+  - pipenv install --dev
+
 script: make test.backend
