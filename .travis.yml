@@ -2,12 +2,10 @@ language: python
 python: "3.6"
 
 env:
-  - PIPENV_SHELL_COMPAT=1
-  - PIPENV_COLORBLIND=true
-  - PIPENV_NOSPIN=true
+  - PIPENV_SHELL_COMPAT=1 PIPENV_COLORBLIND=true PIPENV_NOSPIN=true
 
 install:
   - pip install pipenv
-  - pipenv install --dev
+  - pipenv install --dev --system
 
-script: make test.backend
+script: make server.test
